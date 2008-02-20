@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Todo List</title>
+			<link rel="stylesheet" href="media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+						<div align="center"><h1>Todo List</h1></div>
+<h2>Csv</h2>
+<h3><a href="Csv/Csv_Dialect.html#var$doublequote">Csv_Dialect::$doublequote</a></h3>
+<ul>
+    <li>Implement this</li>
+</ul>
+<h3><a href="Csv/Csv_Dialect.html#var$skipinitialspace">Csv_Dialect::$skipinitialspace</a></h3>
+<ul>
+    <li>Implement this</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html#var$skippedlines">Csv_Reader::$skippedlines</a></h3>
+<ul>
+    <li>This may be flawed - be sure to test it thoroughly</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html#methodclose">Csv_Reader::close()</a></h3>
+<ul>
+    <li>Make sure that this is aware of line-breaks in data as opposed to end of row</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html#methodcount">Csv_Reader::count()</a></h3>
+<ul>
+    <li>Should this remember the position the file was in or something?</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html">Csv_Reader</a></h3>
+<ul>
+    <li>Research the ArrayIterator class and see if it is the best choice for        this and if I'm even using it correctly. There are quite a few methods        that are inherited that may or may not work. It would be cool if we        could use</li>
+</ul>
+<h3><a href="Csv/Csv_Writer/Csv_Writer.html#methodgetFileName">Csv_Writer::getFileName()</a></h3>
+<ul>
+    <li>Add a functions file so that you can use convenience functions like        get('variable', 'default')</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html#methodgetSkippedLines">Csv_Reader::getSkippedLines()</a></h3>
+<ul>
+    <li>probably should return an array with actual data instead of just the amount</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html#methodloadRow">Csv_Reader::loadRow()</a></h3>
+<ul>
+    <li>I can't get fgetcsv to choke on anything, so throwing an exception here may not be possible</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html#constMAX_ROW_SIZE">Csv_Reader::MAX_ROW_SIZE</a></h3>
+<ul>
+    <li>Should this be editable? maybe change it to a public variable</li>
+</ul>
+<h3><a href="Csv/Csv_Reader/Csv_Reader.html#methodunescape">Csv_Reader::unescape()</a></h3>
+<ul>
+    <li>Is the second param necssary? I think it is because array_walk</li>
+</ul>
+<h2>default</h2>
+<h3><a href="default/Test_Of_Csv_Writer.html#methodtest_Writer_Accepts_Handle">Test_Of_Csv_Writer::test_Writer_Accepts_Handle()</a></h3>
+<ul>
+    <li>When appending a file, there should be a way to detect if you need to prepend a newline char        maybe check to see if the last char in the file is a newline char and if not, prepend one?</li>
+</ul>
+<h3><a href="default/Test_Of_Csv_Writer.html#methodtest_Writer_WriteRows_Accepts_Reader">Test_Of_Csv_Writer::test_Writer_WriteRows_Accepts_Reader()</a></h3>
+<ul>
+    <li>For some reason not having a line-ending char causes the reader to not read the last line - find out why</li>
+</ul>
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 19 Feb 2008 21:05:34 -0800 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.1</a>
+	</p>
+	</body>
+</html>

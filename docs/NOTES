@@ -1,0 +1,36 @@
+NOTES
+=====
+
+- count_chars() will be of use when I am ready to start writing Csv_Sniffer
+
+USE CASES
+=========
+
+- user on devnetwork wants to be able to open an excel file and begin writing at the end of it
+  -POSSIBLE SOLUTIONS-
+      - Allow the user to supply an already opened file handle instead of a file name (this way they could open it in append mode)
+      - Allow the user to provide the file opening mode in the constuctor or in a setter
+
+- user wants to force a csv file to download
+  -POSSIBLE SOLUTIONS-
+      - Provide a Csv_Reader->download() or output() function that sends the correct headers to force download
+
+- user wants to be able to read & write a real (binary?) excel file with all its bells and whistles
+  -POSSIBLE SOLUTIONS-
+      - Allow Csv_Dialect to have more effect on the way Csv_Reader and Csv_Writer read and write so that a Csv_Dialect_Excel_Xls dialect could be written
+      - Extend Csv_Writer so that it has more methods like colorColumn colorRow etc.
+      - Integrate library with an existing excel library (http://pear.php.net/package/Spreadsheet_Excel_Writer, http://www.bettina-attack.de/jonny/view.php/projects/php_writeexcel/, http://sourceforge.net/projects/phpexcelreader)
+
+- user wants to overwrite a csv file daily
+  -SOLVED-
+      - Simply overwrite it
+  
+- user wants to quote certain columns 
+  -POSSIBLE SOLUTIONS-
+      - Allow a Csv_Dialect::QUOTE_CUSTOM and then allow Csv_Writer::quotecolumns array
+
+IDEAS
+=====
+
+It might be kind of cool if you could provide options when instantiating a dialect
+$dialect = new Csv_Dialect(array('lineterminator' => "\r\n", 'delimiter' => "\t", 'escapechar' => "\""))
