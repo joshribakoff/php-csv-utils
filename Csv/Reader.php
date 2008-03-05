@@ -162,7 +162,7 @@ class Csv_Reader implements Iterator, Countable
     protected function loadRow() {
     
         if (!$this->current = fgetcsv($this->handle, self::MAX_ROW_SIZE, $this->dialect->delimiter, $this->dialect->quotechar)) {
-            // throw new Csv_Exception('Invalid format for row ' . $this->position);
+            //sthrow new Csv_Exception('Invalid format for row ' . $this->position);
         }
         if (
             $this->dialect->escapechar !== ''

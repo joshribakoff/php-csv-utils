@@ -14,16 +14,20 @@
 
 /**
  * Attempts to deduce the format of a csv file
+ * 
  * @package Csv
  */
 class Csv_Sniffer
 {
-    public function __construct() {
-    
-        // (?:^|\n)(?P<quote>["\']).*?(?P=quote)(?:$|\n)')
-    
-    }
-    
+    /**
+     * Attempts to deduce the format of a sample of a csv file and returns a dialect object
+     * eventually it will throw an exception if it can't deduce the format, but for now it just
+     * returns the basic csv dialect
+     * 
+     * @param string A piece of sample data used to deduce the format of the csv file
+     * @return array An array with the first value being the quote char and the second the delim
+     * @access protected
+     */
     public function sniff($data) {
         
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
@@ -34,12 +38,20 @@ class Csv_Sniffer
         $dialect->delimiter = $delim;
         if (!$quote) {
             $dialect->quotechar = "";
-            //$dialect->quoting =
         }
         return $dialect;
     
     }
-    
+    /**
+     * I copied this functionality from python's csv module. Basically, it looks
+     * for text enclosed by identical quote characters which are in turn surrounded
+     * by identical characters (the probable delimiter). If there is no quotes, the
+     * delimiter cannot be determined this way.
+     *
+     * @param string A piece of sample data used to deduce the format of the csv file
+     * @return array An array with the first value being the quote char and the second the delim
+     * @access protected
+     */
     protected function guessQuoteAndDelim($data) {
     
         $patterns = array();
@@ -68,7 +80,11 @@ class Csv_Sniffer
         return array($quote, $delim);
     
     }
-    
+    /**
+     * Attempts to guess the delimiter of a set of data
+     *
+     * @param string The data you would like to get the delimiter of
+     */
     protected function guessDelim($data) {
 
         $data = explode("\n", $data);
@@ -100,24 +116,3 @@ class Csv_Sniffer
     
     }
 }
-
-/*
-    
-        $ascii = array();
-        foreach (range(0, 127) as $i) $ascii[] = chr($i);
-        $data = explode("\n", $data);
-        foreach ($data as $key => $row) {
-            if (empty($row)) unset($data[$key]);
-        }
-        
-        $chunkLength = min(array(10, strlen($data)));
-        $iteration = 0;
-        $charFrequency = array();
-        $modes = array();
-        $delims = array();
-        list($start, $end) = array(0, min(array($chunkLength, count($data))));
-        
-        while ($start < count($data)) {
-            
-        }
-*/
