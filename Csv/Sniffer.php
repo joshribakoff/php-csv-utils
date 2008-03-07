@@ -11,7 +11,8 @@
  * @license GNU Lesser General Public License
  * @version 0.1
  */
-
+require_once 'Csv/Exception/CannotDetermineDialect.php';
+require_once 'Csv/Exception/DataSampleTooShort.php';
 /**
  * Attempts to deduce the format of a csv file
  * 
@@ -32,16 +33,19 @@ class Csv_Sniffer
         
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
         if (is_null($delim)) {
-            $delim = $this->guessDelim($data);
+            if ($delim = $this->guessDelim($data)) {
+                $dialect = new Csv_Dialect();
+                $dialect->delimiter = $delim;
+                if (!$quote) {
+                    $dialect->quotechar = "";
+                }
+                return $dialect;
+            }
         }
-        $dialect = new Csv_Dialect();
-        $dialect->delimiter = $delim;
-        if (!$quote) {
-            $dialect->quotechar = "";
-        }
-        return $dialect;
+        throw new Csv_Exception_CannotDetermineDialect('Csv_Sniffer was unable to determine the file\'s dialect.');
     
     }
+    
     /**
      * I copied this functionality from python's csv module. Basically, it looks
      * for text enclosed by identical quote characters which are in turn surrounded
@@ -86,14 +90,18 @@ class Csv_Sniffer
      * @param string The data you would like to get the delimiter of
      */
     protected function guessDelim($data) {
-
+    
+        // count every character on every line
         $data = explode("\n", $data);
+        if (count($data) < 10) throw new Csv_Exception_DataSampleTooShort('You must provide at least ten lines in your sample data');
+        
         $frequency = array();
         foreach ($data as $row) {
             if (empty($row)) continue;
             $frequency[] = count_chars($row, 1);
         }
         
+        // determine the "mode" for each character
         $modes = array();
         foreach ($frequency as $line) {
             foreach ($line as $char => $count) {
@@ -102,7 +110,7 @@ class Csv_Sniffer
                     $modes[$char] = $count;
             }
         }
-        
+        // count how many times each character matches its mode in a line
         $temp = array();
         foreach ($modes as $key => $mode) {
             foreach ($frequency as $line) {
@@ -112,7 +120,14 @@ class Csv_Sniffer
         }
         
         arsort($temp);
-        return key($temp);
+        $times_matched = current($temp);
+        $lines = count($data);
+        $consistency = $times_matched / $lines;
+        $threshold = 0.9;
+        // if it is consistent enough, return the delimiter we think it is
+        $delim = key($temp);
+        if ($consistency > $threshold) return $delim;
+        return false;
     
     }
 }
