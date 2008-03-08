@@ -13,6 +13,7 @@
  */
 require_once 'Csv/Exception/CannotDetermineDialect.php';
 require_once 'Csv/Exception/DataSampleTooShort.php';
+require_once 'Csv/Reader/String.php';
 /**
  * Attempts to deduce the format of a csv file
  * 
@@ -37,12 +38,42 @@ class Csv_Sniffer
                 $dialect = new Csv_Dialect();
                 $dialect->delimiter = $delim;
                 if (!$quote) {
-                    $dialect->quotechar = "";
+                    // @todo: figure out if this is the best way to go about this
+                    $dialect->quotechar = '"';
+                    $dialect->quoting = Csv_Dialect::QUOTE_NONE;
                 }
                 return $dialect;
             }
         }
         throw new Csv_Exception_CannotDetermineDialect('Csv_Sniffer was unable to determine the file\'s dialect.');
+    
+    }
+    /**
+     * Determines if a csv sample has a header row
+     * It basically looks at each row in each column. If all but the first column are of the same
+     * type, it is likely a header.
+     */
+    public function has_header($data) {
+    
+        $reader = new Csv_Reader_String($data, $this->sniff($data));
+        $types = array();
+        $lengths = array();
+        foreach ($reader as $line => $row) {
+            foreach ($row as $column) {
+                switch (true) {
+                    case ctype_digit($column):
+                        $types[$line][] = (integer) $column;
+                        break;
+                    case preg_match("/^[0-9\.]$/i", $column, $matches):
+                        $types[$line][] = (double) $column;
+                    case ctype_alnum($column):
+                    default:
+                        $types[$line][] = (string) $column;
+                }
+                $lengths[$line][] = strlen($column);
+            }
+        }
+        pr($lengths);
     
     }
     

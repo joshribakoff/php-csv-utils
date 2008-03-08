@@ -29,7 +29,8 @@ class Test_Of_Csv_Sniffer extends UnitTestCase
         $dialect = $sniffer->sniff($data);
         $this->assertIsA($dialect, 'Csv_Dialect');
         $this->assertEqual($dialect->delimiter, "|");
-        $this->assertEqual($dialect->quotechar, '');
+        $this->assertEqual($dialect->quotechar, '"');
+        $this->assertEqual($dialect->quoting, Csv_Dialect::QUOTE_NONE);
     
     }
     
@@ -49,6 +50,15 @@ class Test_Of_Csv_Sniffer extends UnitTestCase
         $this->expectException(new Csv_Exception_DataSampleTooShort('You must provide at least ten lines in your sample data'));
         $sniffer = new Csv_Sniffer();
         $sniffer->sniff($data);
+    
+    }
+    
+    public function test_Sniff_Can_Detect_Header() {
+    
+        $data = file(realpath('data/tab-200.csv'));
+        $sample = implode("", array_slice($data, 0, 20));
+        $sniffer = new Csv_Sniffer();
+        $this->assertTrue($sniffer->has_header($sample));
     
     }
     
