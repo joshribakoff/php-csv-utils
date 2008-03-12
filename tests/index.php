@@ -23,6 +23,24 @@ function pr($data) {
 
 }
 
+function make_table($headers, $rows) {
+    echo "<table border=\"1\">\n";
+    echo " <tr><th>#</th>\n";
+    foreach ($headers as $header) {
+        printf("  <th>%s</th>", $header);
+    }
+    echo " </tr>";
+    foreach ($rows as $line => $row) {
+        echo " <tr>\n";
+        printf("  <td>%s</td>", $line);
+        foreach ($row as $column) {
+            printf("  <td>%s</td>", $column);
+        }
+        echo " </tr>\n";
+    }
+    echo "</table>\n";
+}
+
 set_include_path(get_include_path() . PATH_SEPARATOR . realpath('../'));
 
 // include simpletest classes

@@ -49,46 +49,32 @@ class Csv_Sniffer
     
     }
     /**
-     * Determines if a csv sample has a header row
-     * It basically looks at each row in each column. If all but the first column are of the same
-     * type, it is likely a header.
+     * Determines if a csv sample has a header row - not 100% accurate by any means
+     * It basically looks at each row in each column. If all but the first column are similar, 
+     * it likely has a header. The way we determine this is first by type, then by length
+     * Other possible methods I could use to determine whether the first row is a header is I
+     * could look to see if all but the first CONTAIN certain characters or something - think about this
      */
     public function has_header($data) {
     
         $reader = new Csv_Reader_String($data, $this->sniff($data));
-        $header = $reader->getRow(); // get header row
-        list($types, $lengths, $total, $headers) = array(array(), array(), array(), count($header));
-        while ($row = $reader->getRow()) {
-            foreach ($row as $key => $column) {
-                $type = $this->getType($column);
-                $length = strlen($column);
-                if ($type == $this->getType($header[$key])) $t++;
-                if ($length == strlen($header[$key])) $l++;
-                $total++;
-            }
-            $types[] = $t;
-            $lengths[] = $l;
-            
-        }
-        pr($lengths);
-        pr($types);
-        pr($total);
-        pr($headers);
-        // find out if all but the first are the of a certain type
-        // find out if all but the first are the same length
-        // at the end, take a vote
-        /*
-        $reader->rewind();
-        $header = $reader->getRow();
-        while ($row = $reader->getRow()) {
-            foreach ($row as $key => $column) {
-                if ($this->getType($header[$key])  == $column) {
-                    echo "<p>Header is the same as this</p>";
-                } else {
-                    echo "<p>Not the same</p>" . $header[$key] . "  " . $column;
+        list($checked, $types, $lengths, $total_lines, $headers) = array(0, array(), array(), $reader->count(), $reader->getRow());
+        $total_columns = count($headers);
+        foreach (range(0, $total_columns-1) as $key => $col) $types[$key] = null;
+        // loop through each remaining row
+        while ($row = $reader->current()) {
+            // no need to check more than 20 lines
+            if ($checked > 20) break; $checked++;
+            $line = $reader->key();
+            foreach ($types as $key => $col) {
+                foreach (array("integer", "double", "string") as $val) {
+                    // @todo - finish this at home
                 }
             }
-        }*/
+            $reader->next();
+        }
+        
+        // now take a vote and if more than a certain threshold have a likely header, we'll return that we think it has a header
     
     }
     
