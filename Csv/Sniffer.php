@@ -56,26 +56,56 @@ class Csv_Sniffer
     public function has_header($data) {
     
         $reader = new Csv_Reader_String($data, $this->sniff($data));
-        $types = array();
-        $lengths = array();
-        foreach ($reader as $line => $row) {
-            foreach ($row as $column) {
-                switch (true) {
-                    case ctype_digit($column):
-                        $types[$line][] = (integer) $column;
-                        break;
-                    case preg_match("/^[0-9\.]$/i", $column, $matches):
-                        $types[$line][] = (double) $column;
-                    case ctype_alnum($column):
-                    default:
-                        $types[$line][] = (string) $column;
-                }
-                $lengths[$line][] = strlen($column);
+        $header = $reader->getRow(); // get header row
+        list($types, $lengths, $total, $headers) = array(array(), array(), array(), count($header));
+        while ($row = $reader->getRow()) {
+            foreach ($row as $key => $column) {
+                $type = $this->getType($column);
+                $length = strlen($column);
+                if ($type == $this->getType($header[$key])) $t++;
+                if ($length == strlen($header[$key])) $l++;
+                $total++;
             }
+            $types[] = $t;
+            $lengths[] = $l;
+            
         }
         pr($lengths);
+        pr($types);
+        pr($total);
+        pr($headers);
+        // find out if all but the first are the of a certain type
+        // find out if all but the first are the same length
+        // at the end, take a vote
+        /*
+        $reader->rewind();
+        $header = $reader->getRow();
+        while ($row = $reader->getRow()) {
+            foreach ($row as $key => $column) {
+                if ($this->getType($header[$key])  == $column) {
+                    echo "<p>Header is the same as this</p>";
+                } else {
+                    echo "<p>Not the same</p>" . $header[$key] . "  " . $column;
+                }
+            }
+        }*/
     
     }
+    
+    protected function getType($value) {
+    
+        switch (true) {
+            case ctype_digit($value):
+                return "integer";
+            case preg_match("/^[array()-9\.]$/i", $value, $matches):
+                return "double";
+            case ctype_alnum($value):
+            default:
+                return "string";
+        }
+    
+    }
+    
     
     /**
      * I copied this functionality from python's csv module. Basically, it looks
