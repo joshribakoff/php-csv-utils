@@ -284,6 +284,7 @@ class Csv_Reader implements Iterator, Countable
     
         $lines = 0;
         foreach ($this as $row) $lines++;
+        $this->rewind();
         return (integer) $lines;
     
     }

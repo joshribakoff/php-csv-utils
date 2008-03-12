@@ -174,4 +174,11 @@ class Test_Of_Csv_Reader extends UnitTestCase
         
     
     }
+    public function test_Count_Rewinds_Reader() {
+    
+        $reader = new Csv_Reader($this->files['comma-200']);
+        count($reader);
+        $this->assertEqual($reader->key(), 0);
+    
+    }
 }
