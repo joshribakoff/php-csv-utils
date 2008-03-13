@@ -60,19 +60,18 @@ class Csv_Sniffer
         $reader = new Csv_Reader_String($data, $this->sniff($data));
         list($checked, $types, $lengths, $total_lines, $headers) = array(0, array(), array(), $reader->count(), $reader->getRow());
         $total_columns = count($headers);
-        foreach (range(0, $total_columns-1) as $key => $col) $types[$key] = null;
-        // loop through each remaining row
+        foreach (range(0, $total_columns-1) as $key => $col) $types[$col] = null;
+        // loop through each remaining rows
         while ($row = $reader->current()) {
             // no need to check more than 20 lines
             if ($checked > 20) break; $checked++;
             $line = $reader->key();
-            foreach ($types as $key => $col) {
-                foreach (array("integer", "double", "string") as $val) {
-                    // @todo - finish this at home
-                }
-            }
+            // loop through the types array (use as column)
+            
+            // if ($this->getType($row[$key]) == $this->getType($headers[$key])) echo "WOW";
             $reader->next();
         }
+        //pr($headers, $reader->asArray());
         
         // now take a vote and if more than a certain threshold have a likely header, we'll return that we think it has a header
     

@@ -186,6 +186,20 @@ class Csv_Reader implements Iterator, Countable
     
     }
     /**
+     * Returns csv data as an array
+     * @todo if first param is set to true the header row is used as keys
+     */
+    public function toArray() {
+    
+        $return = array();
+        foreach ($this as $row) {
+            $return[] = $row;
+        }
+        //$this->rewind();
+        return $return;
+    
+    }
+    /**
      * Get total rows
      *
      * @return integer The number of rows in the file (not includeing line-breaks in the data)

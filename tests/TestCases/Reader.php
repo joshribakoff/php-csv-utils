@@ -181,4 +181,18 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->key(), 0);
     
     }
+    // test that $reader->toArray() returns an array of all csv data
+    // @todo if first param in toArray() is set to true header row is used as keys
+    // @todo also needs to ensure that object is rewound after toArray
+    public function test_Reader_Can_Return_Data_As_Array() {
+    
+        $reader = new Csv_Reader($this->files['comma-200']);
+        $data = $reader->toArray();
+        $compare = array();
+        foreach ($reader as $row) {
+            $compare[] = $row;
+        }
+        $this->assertEqual($data, $compare);
+    
+    }
 }
