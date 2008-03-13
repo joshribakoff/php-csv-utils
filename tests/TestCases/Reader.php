@@ -187,12 +187,16 @@ class Test_Of_Csv_Reader extends UnitTestCase
     public function test_Reader_Can_Return_Data_As_Array() {
     
         $reader = new Csv_Reader($this->files['comma-200']);
+        $first = $reader->current(); // grab this for testing later
         $data = $reader->toArray();
         $compare = array();
         foreach ($reader as $row) {
             $compare[] = $row;
         }
         $this->assertEqual($data, $compare);
+        $reader->toArray();
+        // test that toArray() rewinds after use
+        $this->assertEqual($reader->current(), $first);
     
     }
 }

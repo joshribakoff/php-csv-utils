@@ -195,7 +195,7 @@ class Csv_Reader implements Iterator, Countable
         foreach ($this as $row) {
             $return[] = $row;
         }
-        //$this->rewind();
+        $this->rewind();
         return $return;
     
     }
