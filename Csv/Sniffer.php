@@ -96,7 +96,15 @@ class Csv_Sniffer
         return ($has_headers > 0);
     
     }
-    
+    /**
+     * Since the reader returns all strings, this checks the type of the string for comparison
+     * against header row in hasHeader()
+     *
+     * @access protected
+     * @param string Value we're trying to detect the type of
+     * @return string type of value
+     * @todo A better way to do this would be to have Csv_Reader cast values to their correct type
+     */
     protected function getType($value) {
     
         switch (true) {
@@ -110,8 +118,6 @@ class Csv_Sniffer
         }
     
     }
-    
-    
     /**
      * I copied this functionality from python's csv module. Basically, it looks
      * for text enclosed by identical quote characters which are in turn surrounded
@@ -154,6 +160,8 @@ class Csv_Sniffer
      * Attempts to guess the delimiter of a set of data
      *
      * @param string The data you would like to get the delimiter of
+     * @access protected
+     * @return mixed If a delimiter can be found it is returned otherwise false is returned
      */
     protected function guessDelim($data) {
     

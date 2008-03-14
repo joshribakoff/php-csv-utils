@@ -68,4 +68,17 @@ class Csv_Dialect
      * @var integer Set to any of the self::QUOTE_* constants above
      */
     public $quoting = self::QUOTE_NONE;
+    
+    public function __construct($options = null) {
+    
+        if (is_array($options)) {
+            //pr($options);
+            $properties = array();
+            foreach ($this as $property => $value) $properties[$property] = $value;
+            foreach (array_intersect_key($options, $properties) as $property => $value) {
+                $this->{$property} = $value;
+            }
+        }
+     
+    }
 }
