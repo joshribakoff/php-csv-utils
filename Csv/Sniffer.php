@@ -34,18 +34,18 @@ class Csv_Sniffer
         
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
         if (is_null($delim)) {
-            if ($delim = $this->guessDelim($data)) {
-                $dialect = new Csv_Dialect();
-                $dialect->delimiter = $delim;
-                if (!$quote) {
-                    // @todo: figure out if this is the best way to go about this
-                    $dialect->quotechar = '"';
-                    $dialect->quoting = Csv_Dialect::QUOTE_NONE;
-                }
-                return $dialect;
+            if (!$delim = $this->guessDelim($data)) {
+                throw new Csv_Exception_CannotDetermineDialect('Csv_Sniffer was unable to determine the file\'s dialect.');
             }
         }
-        throw new Csv_Exception_CannotDetermineDialect('Csv_Sniffer was unable to determine the file\'s dialect.');
+        $dialect = new Csv_Dialect();
+        if (!$quote) {
+            // @todo: figure out if this is the best way to go about this
+            $dialect->quotechar = '"';
+            $dialect->quoting = Csv_Dialect::QUOTE_NONE;
+        }
+        $dialect->delimiter = $delim;
+        return $dialect;
     
     }
     /**
