@@ -57,10 +57,22 @@ class Test_Of_Csv_Sniffer extends UnitTestCase
     
         $data = file(realpath('data/tab-200.csv'));
         $sample = implode("", array_slice($data, 0, 20));
+        $sample2 = implode("", array_slice($data, 1, 21));
+        $sample3 = implode("\n", file(realpath("data/excel-formatted.csv")));
+        $sample4 = implode("", file(realpath("data/pipe-100.csv")));
         $sniffer = new Csv_Sniffer();
-        //$this->assertTrue($sniffer->has_header($sample));
+        $this->assertTrue($sniffer->hasHeader($sample));
+        $this->assertFalse($sniffer->hasHeader($sample2));
+        // this doesn't work because of the long text fields in the data
+        // @todo: find a better way to count delims - like if delims are inside quotes, don't count them I dunno
+        //$this->assertFalse($sniffer->hasHeader($sample3));
+        $this->assertTrue($sniffer->hasHeader($sample4));
     
     }
     
+    public function test_Sniff_Doesnt_Use_More_Than_Twenty_Lines() {
+    }
+    public function test_Sniff_Can_Accept_String_Or_Any_Csv_Reader() {
+    }
     
 }

@@ -55,10 +55,10 @@ class Csv_Sniffer
      * Other possible methods I could use to determine whether the first row is a header is I
      * could look to see if all but the first CONTAIN certain characters or something - think about this
      */
-    public function has_header($data) {
+    public function hasHeader($data) {
     
         $reader = new Csv_Reader_String($data, $this->sniff($data));
-        list($checked, $types, $lengths, $total_lines, $headers) = array(0, array(), array(), $reader->count(), $reader->getRow());
+        list($has_headers, $checked, $types, $lengths, $total_lines, $headers) = array(0, 0, array(), array(), $reader->count(), $reader->getRow());
         $total_columns = count($headers);
         foreach (range(0, $total_columns-1) as $key => $col) $types[$col] = null;
         // loop through each remaining rows
@@ -66,14 +66,34 @@ class Csv_Sniffer
             // no need to check more than 20 lines
             if ($checked > 20) break; $checked++;
             $line = $reader->key();
-            // loop through the types array (use as column)
-            
-            // if ($this->getType($row[$key]) == $this->getType($headers[$key])) echo "WOW";
+            // loop through row and grab type for each column
+            foreach ($row as $col => $val) {
+                $types[$col][] = $this->getType($val);
+                $lengths[$col][] = strlen($val);
+            }
             $reader->next();
         }
-        //pr($headers, $reader->asArray());
-        
         // now take a vote and if more than a certain threshold have a likely header, we'll return that we think it has a header
+        foreach ($types as $key => $column) {
+            $unique = array_unique($column);
+            if (count($unique) == 1) { // if all are of the same type
+                if ($unique[0] == $this->getType($headers[$key])) {
+                    // all rows type matched header type, so try length now
+                    $unique = array_unique($lengths[$key]);
+                    if (count($unique) == 1) {
+                        if ($unique[0] == strlen($headers[$key])) {
+                            $has_headers--;
+                        } else {
+                            $has_headers++;
+                        }
+                    }
+                    //printf ("%s is the same as %s<br>", $unique[0], $this->getType($headers[$key]));
+                } else {
+                    $has_headers++;
+                }
+            }
+        }
+        return ($has_headers > 0);
     
     }
     
@@ -161,7 +181,7 @@ class Csv_Sniffer
         foreach ($modes as $key => $mode) {
             foreach ($frequency as $line) {
                 if (!isset($temp[chr($key)])) $temp[chr($key)] = 0;
-                if (isset($line[$key]) && $line[$key] == $mode) $temp[chr($key)]++; 
+                if (isset($line[$key]) && $line[$key] == $mode) $temp[chr($key)]++;
             }
         }
         
