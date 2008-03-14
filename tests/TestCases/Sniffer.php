@@ -63,8 +63,6 @@ class Test_Of_Csv_Sniffer extends UnitTestCase
         $sniffer = new Csv_Sniffer();
         $this->assertTrue($sniffer->hasHeader($sample));
         $this->assertFalse($sniffer->hasHeader($sample2));
-        // this doesn't work because of the long text fields in the data
-        // @todo: find a better way to count delims - like if delims are inside quotes, don't count them I dunno
         $this->assertFalse($sniffer->hasHeader($sample3));
         $this->assertTrue($sniffer->hasHeader($sample4));
     
