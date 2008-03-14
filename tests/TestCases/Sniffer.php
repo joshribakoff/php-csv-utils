@@ -56,19 +56,21 @@ class Test_Of_Csv_Sniffer extends UnitTestCase
     public function test_Sniff_Can_Detect_Header() {
     
         $data = file(realpath('data/tab-200.csv'));
-        $sample = implode("", array_slice($data, 0, 20));
+        $sample1 = implode("", array_slice($data, 0, 20));
         $sample2 = implode("", array_slice($data, 1, 21));
         $sample3 = implode("\n", file(realpath("data/excel-formatted.csv")));
         $sample4 = implode("", file(realpath("data/pipe-100.csv")));
         $sniffer = new Csv_Sniffer();
-        $this->assertTrue($sniffer->hasHeader($sample));
+        $this->assertTrue($sniffer->hasHeader($sample1));
         $this->assertFalse($sniffer->hasHeader($sample2));
         $this->assertFalse($sniffer->hasHeader($sample3));
         $this->assertTrue($sniffer->hasHeader($sample4));
     
     }
-    
     public function test_Sniff_Doesnt_Use_More_Than_Twenty_Lines() {
+    
+        //$file1 = file(realpath('data/tab-200.csv'));
+    
     }
     public function test_Sniff_Can_Accept_String_Or_Any_Csv_Reader() {
     }

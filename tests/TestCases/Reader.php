@@ -199,4 +199,14 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->current(), $first);
     
     }
+    public function test_Reader_String() {
+    
+        $sample = "";
+        for ($i = 0; $i <= 10; $i++) {
+            $sample .= "this,is,some,test,data\n";
+        }
+        $data = new Csv_Reader_String($sample);
+        $this->assertEqual($data->count(), 10);
+    
+    }
 }
