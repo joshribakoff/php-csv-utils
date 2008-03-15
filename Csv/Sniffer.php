@@ -5,7 +5,7 @@
  * This class accepts a sample of csv and attempts to deduce its format. It then
  * can return a Csv_Dialect tailored to that particular csv file
  * Please read the LICENSE file
- * @copyright MC2 Design Group, Inc. <luke@mc2design.com>
+ * @copyright Luke Visinoni <luke.visinoni@gmail.com>
  * @author Luke Visinoni <luke@mc2design.com>
  * @package Csv
  * @license GNU Lesser General Public License

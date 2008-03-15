@@ -63,7 +63,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
     
         
         $writer = new Csv_Writer($this->file);
-        $this->assertEqual($this->file, $writer->getFileName());
+        $this->assertEqual($this->file, $writer->getPath());
     
     }
     /**

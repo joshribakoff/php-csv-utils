@@ -2,9 +2,9 @@
 /**
  * CSV Utils
  * 
- * This is a csv reader - basically it reads a csv file into an array
+ * This is a csv writer - basically it writest a csv file from an array
  * Please read the LICENSE file
- * @copyright MC2 Design Group, Inc. <luke@mc2design.com>
+ * @copyright Luke Visinoni <luke.visinoni@gmail.com>
  * @author Luke Visinoni <luke@mc2design.com>
  * @package Csv
  * @license GNU Lesser General Public License
@@ -94,7 +94,7 @@ class Csv_Writer
      * @todo Add a functions file so that you can use convenience functions like
      *       get('variable', 'default')
      */
-    public function getFileName() {
+    public function getPath() {
     
         return $this->filename;
     

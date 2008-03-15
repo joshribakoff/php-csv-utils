@@ -4,7 +4,7 @@
  * 
  * This is a Csv Dialect - it tells readers and writers the format of a csv file
  * Please read the LICENSE file
- * @copyright MC2 Design Group, Inc. <luke@mc2design.com>
+ * @copyright Luke Visinoni <luke.visinoni@gmail.com>
  * @author Luke Visinoni <luke@mc2design.com>
  * @package Csv
  * @license GNU Lesser General Public License

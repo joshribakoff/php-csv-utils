@@ -4,7 +4,7 @@
  * 
  * This is a csv reader - basically it reads a csv file into an array
  * Please read the LICENSE file
- * @copyright MC2 Design Group, Inc. <luke@mc2design.com>
+ * @copyright Luke Visinoni <luke.visinoni@gmail.com>
  * @author Luke Visinoni <luke@mc2design.com>
  * @package Csv
  * @license GNU Lesser General Public License
@@ -108,7 +108,7 @@ class Csv_Reader implements Iterator, Countable
     
     }
     /**
-     * Set the path to the csv file & initiate file
+     * Set the path to the csv file
      *
      * @param string The full path to the file we want to read
      * @access protected
