@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Csv/Exception.php';
+require_once 'Csv/Exception/CannotAccessFile.php';
 
 Mock::Generate('Csv_Dialect', 'Mock_Dialect');
 Mock::Generate('Csv_Dialect', 'Mock_Dialect_Two');
@@ -105,7 +105,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
     public function test_Csv_Writer_Throws_Exception_If_Cant_Write() {
     
         $path = './';
-        $this->expectException(new Csv_Exception(sprintf('Unable to create file: "%s".', $path)));
+        $this->expectException(new Csv_Exception_CannotAccessFile(sprintf('Unable to create/access file: "%s".', $path)));
         $writer = new Csv_Writer($path);
         $writer->close();
     
