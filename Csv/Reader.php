@@ -187,7 +187,7 @@ class Csv_Reader implements Iterator, Countable
     }
     /**
      * Returns csv data as an array
-     * @todo if first param is set to true the header row is used as keys
+     * @todo if reader has been given a header row it is used as keys
      */
     public function toArray() {
     
