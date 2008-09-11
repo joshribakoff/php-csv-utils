@@ -30,10 +30,17 @@ class Test_Of_Csv_Reader extends UnitTestCase
     /**
      * Csv_Reader should use the default dialect if none is provied (excel for now)
     */
-    public function test_Csv_Reader_Uses_Default_Dialect_If_None_Provided() {
+    public function test_Csv_Reader_Uses_Sniffer_To_Get_Dialect_If_None_Provided() {
     
         $reader = new Csv_Reader($this->files['comma-200']);
-        $this->assertIsA($reader->getDialect(), 'Csv_Dialect');
+        $dialect = $reader->getDialect();
+        $this->assertIsA($dialect, 'Csv_Dialect');
+        $this->assertEqual($dialect->delimiter, ",");
+        
+        $reader = new Csv_Reader($this->files['pipe-100']);
+        $dialect = $reader->getDialect();
+        $this->assertIsA($dialect, 'Csv_Dialect');
+        $this->assertEqual($dialect->delimiter, "|");
     
     }
     /**

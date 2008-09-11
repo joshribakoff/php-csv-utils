@@ -31,7 +31,7 @@ class Csv_Sniffer
      * @access protected
      */
     public function sniff($data) {
-        
+    
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
         if (is_null($delim)) {
             if (!$delim = $this->guessDelim($data)) {

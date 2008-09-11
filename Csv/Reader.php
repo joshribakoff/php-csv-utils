@@ -70,18 +70,25 @@ class Csv_Reader implements Iterator, Countable
      * Class constructor
      *
      * @param string Path to csv file we want to open
-     * @param string The character(s) used to seperate columns in the csv file
+     * @param Csv_Dialect
      * @param boolean If set to false, don't treat the first row as headers - defaults to true
-     * @throws Csv_Exception
+     * @throws Csv_Exception_FileNotFound
      */
     public function __construct($path, Csv_Dialect $dialect = null/*, $skip_empty_rows = false*/) {
     
-        if (is_null($dialect)) $dialect = new Csv_Dialect;
-        $this->dialect = $dialect;
         // open the file
         $this->setPath($path);
         $this->handle = fopen($this->path, 'rb');
         if ($this->handle === false) throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
+        if (is_null($dialect)) {
+            try {
+                $sniffer = new Csv_Sniffer;
+                $dialect = $sniffer->sniff(file_get_contents($path));
+            } catch (Csv_Exception_DataSampleTooShort $e) {
+                $dialect = new Csv_Dialect;
+            }
+        }
+        $this->dialect = $dialect;
         $this->rewind();
     
     }
