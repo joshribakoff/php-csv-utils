@@ -21,7 +21,7 @@ class Test_Of_Csv_AutoDetect extends UnitTestCase
     /**
      * 
      */
-    public function test_Sniff_Method_Returns_Csv_Dialect() {
+    public function test_Detect_Method_Returns_Csv_Dialect() {
     
         $rows = file('data/pipe-100.csv');
         $data = implode("", array_slice($rows, 0, 20));
@@ -34,7 +34,7 @@ class Test_Of_Csv_AutoDetect extends UnitTestCase
     
     }
     
-    public function test_Sniff_Throws_Exception_If_Dialect_Cant_Be_Determined() {
+    public function test_Detect_Throws_Exception_If_Dialect_Cant_Be_Determined() {
     
         $data = "I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf";
@@ -44,7 +44,7 @@ class Test_Of_Csv_AutoDetect extends UnitTestCase
     
     }
     
-    public function test_Sniff_Throws_Exception_If_Data_Sample_Too_Short() {
+    public function test_Detect_Throws_Exception_If_Data_Sample_Too_Short() {
     
         $data = "I am a piece of data without|||| any delimiters or anything";
         $this->expectException(new Csv_Exception_DataSampleTooShort('You must provide at least ten lines in your sample data'));
@@ -53,7 +53,7 @@ class Test_Of_Csv_AutoDetect extends UnitTestCase
     
     }
     
-    public function test_Sniff_Can_Detect_Header() {
+    public function test_Detect_Can_Detect_Header() {
     
         $data = file(realpath('data/tab-200.csv'));
         $sample1 = implode("", array_slice($data, 0, 20));
@@ -67,12 +67,12 @@ class Test_Of_Csv_AutoDetect extends UnitTestCase
         $this->assertTrue($detecter->hasHeader($sample4));
     
     }
-    public function test_Sniff_Doesnt_Use_More_Than_Twenty_Lines() {
+    public function test_Detect_Doesnt_Use_More_Than_Twenty_Lines() {
     
         //$file1 = file(realpath('data/tab-200.csv'));
     
     }
-    public function test_Sniff_Can_Accept_String_Or_Any_Csv_Reader() {
+    public function test_Detect_Can_Accept_String_Or_Any_Csv_Reader() {
     }
     
 }

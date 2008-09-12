@@ -95,7 +95,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
     
         $this->assertFalse(file_exists($this->file));
         $writer = new Csv_Writer($this->file);
-        $writer->close();
+        $writer->writeRow(array('one','two','three'));
         $this->assertTrue(file_exists($this->file));
     
     }
@@ -107,19 +107,18 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $path = './';
         $this->expectException(new Csv_Exception_CannotAccessFile(sprintf('Unable to create/access file: "%s".', $path)));
         $writer = new Csv_Writer($path);
-        $writer->close();
+        $writer->writeRow(array('one','two','three'));
     
     }
     /**
      * Test that writeRow writes one row to the file
      */
-    public function test_Csv_Writer_Writes_Row() {
+    public function test_Csv_Writer_Writes_Row_Immediately() {
     
         $row = array('ONE', 'TWO', 'THREE');
         $writer = new Csv_Writer($this->file2);
         $writer->writeRow($row);
-        $writer->close();
-        $this->assertEqual(file_get_contents($this->file2), 'ONE,TWO,THREE');
+        $this->assertEqual(file_get_contents($this->file2), 'ONE,TWO,THREE' . $writer->getDialect()->lineterminator);
     
     }
     /**
@@ -130,28 +129,19 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $row = array('ONE', 'TWO', 'THREE');
         $writer = new Csv_Writer($this->file3);
         $writer->writeRow($row);
+        $lineterm = $writer->getDialect()->lineterminator;
         unset($writer);
-        $this->assertEqual(file_get_contents($this->file3), 'ONE,TWO,THREE');
+        $this->assertEqual(file_get_contents($this->file3), 'ONE,TWO,THREE' . $lineterm);
     
     }
-    public function test_Csv_Writer_Does_Not_Throw_Exception_If_Closed_Then_Destroyed() {
     
-        $row = array('ONE', 'TWO', 'THREE');
-        $writer = new Csv_Writer($this->file3);
-        $writer->writeRow($row);
-        $writer->close();
-        unset($writer); // this should not throw an exception
-        $this->assertTrue(true);
-    
-    }
     public function test_Can_Change_delimiter() {
 
         $dialect = new Mock_Dialect;
         $dialect->delimiter = "#";
         $writer = new Csv_Writer($this->file, $dialect);
         $writer->writeRow(array(1,2,3));
-        $writer->close();
-        $this->assertEqual(file_get_contents($this->file), '1#2#3');
+        $this->assertEqual(file_get_contents($this->file), '1#2#3' . $writer->getDialect()->lineterminator);
 
     }
     /**
@@ -163,8 +153,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
         
         $writer = new Csv_Writer($this->file, $this->dialect);
         $writer->writeRow($this->testdata[0]);
-        $writer->close();
-        $this->assertEqual('This contains the quote "character" because it\'s cool like that,1,2', file_get_contents($this->file));
+        $this->assertEqual('This contains the quote "character" because it\'s cool like that,1,2' . $writer->getDialect()->lineterminator, file_get_contents($this->file));
     
     }
     /**
@@ -175,8 +164,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $this->dialect->quoting = Csv_Dialect::QUOTE_ALL;
         $writer = new Csv_Writer($this->file, $this->dialect);
         $writer->writeRow($this->testdata[0]);
-        $writer->close();
-        $this->assertEqual('"This contains the quote \\"character\\" because it\'s cool like that","1","2"', file_get_contents($this->file));
+        $this->assertEqual('"This contains the quote \\"character\\" because it\'s cool like that","1","2"' . $writer->getDialect()->lineterminator, file_get_contents($this->file));
     
     }
     /**
@@ -187,21 +175,18 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $this->dialect->quoting = Csv_Dialect::QUOTE_MINIMAL;
         $writer = new Csv_Writer($this->file, $this->dialect);
         $writer->writeRow($this->testdata[0]);
-        $writer->close();
         // check that quotes cause text to be quoted
-        $this->assertEqual('"This contains the quote \\"character\\" because it\'s cool like that",1,2', file_get_contents($this->file));
+        $this->assertEqual('"This contains the quote \\"character\\" because it\'s cool like that",1,2' . $writer->getDialect()->lineterminator, file_get_contents($this->file));
         
         // check that line breaks cause text to be quoted
         $writer = new Csv_Writer($this->file2, $this->dialect);
         $writer->writeRow($this->testdata[3]);
-        $writer->close();
-        $this->assertEqual('"I am regular' . "\n\r" . ' text but with a line break in me",21,Num123412342', file_get_contents($this->file2));
+        $this->assertEqual('"I am regular' . "\n\r" . ' text but with a line break in me",21,Num123412342' . $writer->getDialect()->lineterminator, file_get_contents($this->file2));
         
         // check that commas (if they are the delim char) cause text to be quoted
         $writer = new Csv_Writer($this->file3, $this->dialect);
         $writer->writeRow($this->testdata[1]);
-        $writer->close();
-        $this->assertEqual("\"This one contains some commas, and some \t\t tabs and stuff\",45,2009", file_get_contents($this->file3));
+        $this->assertEqual("\"This one contains some commas, and some \t\t tabs and stuff\",45,2009" . $writer->getDialect()->lineterminator, file_get_contents($this->file3));
     
     }
     /**
@@ -212,8 +197,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $this->dialect->quoting = Csv_Dialect::QUOTE_NONNUMERIC;
         $writer = new Csv_Writer($this->file, $this->dialect);
         $writer->writeRow($this->testdata[3]);
-        $writer->close();
-        $this->assertEqual('"I am regular' . "\n\r" . ' text but with a line break in me",21,"Num123412342"', file_get_contents($this->file));
+        $this->assertEqual('"I am regular' . "\n\r" . ' text but with a line break in me",21,"Num123412342"' . $writer->getDialect()->lineterminator, file_get_contents($this->file));
     
     }
     /**
@@ -228,8 +212,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
             array(7,8,9),
         );
         $writer->writeRows($data);
-        $writer->close(); // write data
-        $this->assertEqual("1,2,3\r\n4,5,6\r\n7,8,9", file_get_contents($this->file));
+        $this->assertEqual("1,2,3" . $writer->getDialect()->lineterminator . "4,5,6" . $writer->getDialect()->lineterminator . "7,8,9" . $writer->getDialect()->lineterminator, file_get_contents($this->file));
     
     }
     /**
@@ -245,8 +228,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $dialect->delimiter = "\t";
         $writer->setDialect($dialect);
         $writer->writeRows($reader);
-        $writer->close(); // write data
-        $this->assertEqual("1\t2\t3\r\n4\t5\t6\r\n7\t8\t9", file_get_contents($this->file2));
+        $this->assertEqual("1\t2\t3\r\n4\t5\t6\r\n7\t8\t9" . $writer->getDialect()->lineterminator, file_get_contents($this->file2));
     
     }
     /**
@@ -260,8 +242,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $file = fopen($this->file, 'ab');
         $writer = new Csv_Writer($file);
         $writer->writeRow(array(10,11,12));
-        $writer->close();
-        $this->assertEqual(file_get_contents($this->file), $content . "10,11,12");
+        $this->assertEqual(file_get_contents($this->file), $content . "10,11,12" . $writer->getDialect()->lineterminator);
     
     }
 }
