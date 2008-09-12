@@ -1,6 +1,6 @@
 <?php
 /**
- * CSV Utils - Sniffer
+ * CSV Utils - AutoDetect
  * 
  * This class accepts a sample of csv and attempts to deduce its format. It then
  * can return a Csv_Dialect tailored to that particular csv file
@@ -19,7 +19,7 @@ require_once 'Csv/Reader/String.php';
  * 
  * @package Csv
  */
-class Csv_Sniffer
+class Csv_AutoDetect
 {
     /**
      * Attempts to deduce the format of a sample of a csv file and returns a dialect object
@@ -30,12 +30,12 @@ class Csv_Sniffer
      * @return array An array with the first value being the quote char and the second the delim
      * @access protected
      */
-    public function sniff($data) {
+    public function detect($data) {
     
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
         if (is_null($delim)) {
             if (!$delim = $this->guessDelim($data)) {
-                throw new Csv_Exception_CannotDetermineDialect('Csv_Sniffer was unable to determine the file\'s dialect.');
+                throw new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.');
             }
         }
         $dialect = new Csv_Dialect();
@@ -57,7 +57,7 @@ class Csv_Sniffer
      */
     public function hasHeader($data) {
     
-        $reader = new Csv_Reader_String($data, $this->sniff($data));
+        $reader = new Csv_Reader_String($data, $this->detect($data));
         list($has_headers, $checked, $types, $lengths, $total_lines, $headers) = array(0, 0, array(), array(), $reader->count(), $reader->getRow());
         $total_columns = count($headers);
         foreach (range(0, $total_columns-1) as $key => $col) $types[$col] = null;

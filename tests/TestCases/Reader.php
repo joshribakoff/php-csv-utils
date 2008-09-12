@@ -30,7 +30,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
     /**
      * Csv_Reader should use the default dialect if none is provied (excel for now)
     */
-    public function test_Csv_Reader_Uses_Sniffer_To_Get_Dialect_If_None_Provided() {
+    public function test_Csv_Reader_Uses_AutoDetect_To_Get_Dialect_If_None_Provided() {
     
         $reader = new Csv_Reader($this->files['comma-200']);
         $dialect = $reader->getDialect();

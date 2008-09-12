@@ -82,8 +82,8 @@ class Csv_Reader implements Iterator, Countable
         if ($this->handle === false) throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
         if (is_null($dialect)) {
             try {
-                $sniffer = new Csv_Sniffer;
-                $dialect = $sniffer->sniff(file_get_contents($path));
+                $detecter = new Csv_AutoDetect;
+                $dialect = $detecter->detect(file_get_contents($path));
             } catch (Csv_Exception_DataSampleTooShort $e) {
                 $dialect = new Csv_Dialect;
             }
