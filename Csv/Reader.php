@@ -67,6 +67,10 @@ class Csv_Reader implements Iterator, Countable
      */
     protected $skippedlines = 0;
     /**
+     * An array of values to use as the header row - allows to reference by key
+     */
+    protected $header = array();
+    /**
      * Class constructor
      *
      * @param string Path to csv file we want to open
@@ -112,6 +116,19 @@ class Csv_Reader implements Iterator, Countable
     public function setDialect(Csv_Dialect $dialect) {
     
         $this->dialect = $dialect;
+    
+    }
+    /**
+     * Change the dialect this csv reader is using
+     *
+     * @param Csv_Dialect the current Csv_Dialect object
+     * @access public
+     */
+    public function setHeader($header) {
+    
+        $row = $this->current();
+        if (count($row) != count($header)) throw new Csv_Exception_InvalidHeaderRow('A header row should contain the same amount of columns as the data');
+        $this->header = $header;
     
     }
     /**
@@ -244,7 +261,7 @@ class Csv_Reader implements Iterator, Countable
     
         $this->position++;
         $this->loadRow(); // loads the current row into memory
-        return ($this->valid()) ? $this->current : false;
+        return ($this->valid()) ? $this->current() : false;
     
     }
     /**
@@ -269,7 +286,8 @@ class Csv_Reader implements Iterator, Countable
      */
     public function current() {
     
-        return $this->current;
+        if (empty($this->header)) return $this->current;
+        else return array_combine($this->header, $this->current);
     
     }
     /**

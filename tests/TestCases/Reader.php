@@ -233,4 +233,21 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($data->count(), 10);
     
     }
+    
+    public function test_Set_Header() {
+    
+        $reader = new Csv_Reader($this->files['comma-200']);
+        $header = array('name', 'date', 'email', 'address_1', 'city', 'state', 'zip', 'country', 'phone', 'fax', 'keywords', 'order_id');
+        $reader->setHeader($header);
+        $row = $reader->getRow();
+        $this->assertEqual(array_keys($row), $header);
+        $row = $reader->current();
+        $this->assertEqual(array_keys($row), $header);
+        $row = $reader->next();
+        $this->assertEqual(array_keys($row), $header);
+        $allrows = $reader->toArray();
+        $this->assertEqual(array_keys(current($allrows)), $header);
+    
+    }
+    
 }
