@@ -12,6 +12,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
 {
     protected $files = array();
     protected $tempfile;
+    
     public function setUp() {
     
         $this->files['tab-200'] = './data/tab-200.csv';
@@ -21,12 +22,14 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->tempfile = './data/tmp.csv';
     
     }
+    
     public function tearDown() {
     
         if (isset($this->tempfile) && file_exists($this->tempfile));
         unset($this->tempfile);
     
     }
+    
     /**
      * Csv_Reader should use the default dialect if none is provied (excel for now)
     */
@@ -43,6 +46,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($dialect->delimiter, "|");
     
     }
+    
     /**
      * Csv_Reader should also be able to accept a csv dialect in its constructor or by setDialect()
     */
@@ -55,6 +59,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertIsA($reader->getDialect(), 'Mock_Dialect_Two');
     
     }
+    
     /**
      * Csv_Reader is an array-like object, so you should be able to count it
      */
@@ -65,6 +70,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->count(), 200);
     
     }
+    
     /**
      * We should get back the path to the csv file if the csv file exists
      */
@@ -75,6 +81,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->getPath(), realpath($file));
     
     }
+    
     /**
      * Tests that escape characters are removed from data
      */
@@ -99,6 +106,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->current(), $escape_removed_row);
     
     }
+    
     /**
      * Tests that if the delimiter is set properly, rows are counted properly
      */
@@ -108,6 +116,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual(count($reader->current()), 12);
     
     }
+    
     /**
      * Tests that you can loop through Csv_Reader as if it was an array
      * This is the best way I can think of to test that its iterable
@@ -125,6 +134,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($correct, 200);
     
     }
+    
     /**
      * If the file doesn't exist, we should throw an exception
      */
@@ -135,6 +145,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $reader = new Csv_Reader($path);
     
     }
+    
     /**
      * Check that blank lines are properly skipped
      */
@@ -145,6 +156,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->getSkippedLines(), 13);
     
     }
+    
     /**
      * Test that class is capable of maintaining its state / position 
      */
@@ -161,6 +173,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($lines, 198);
     
     }
+    
     /*
     public function test_Csv_Reader_Throws_Exception_On_Corrupt_Row() {
     
@@ -173,6 +186,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         }
     
     }*/
+    
     /**
      * Test that class is capable of maintaining its state / position 
      */
@@ -181,6 +195,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         
     
     }
+    
     public function test_Count_Rewinds_Reader() {
     
         $reader = new Csv_Reader($this->files['comma-200']);
@@ -188,6 +203,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->key(), 0);
     
     }
+    
     // test that $reader->toArray() returns an array of all csv data
     // @todo if first param in toArray() is set to true header row is used as keys
     // @todo also needs to ensure that object is rewound after toArray
@@ -206,6 +222,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->current(), $first);
     
     }
+    
     public function test_Reader_String() {
     
         $sample = "";
