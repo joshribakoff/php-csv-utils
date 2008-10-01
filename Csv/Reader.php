@@ -5,7 +5,7 @@
  * This is a csv reader - basically it reads a csv file into an array
  * Please read the LICENSE file
  * @copyright Luke Visinoni <luke.visinoni@gmail.com>
- * @author Luke Visinoni <luke@mc2design.com>
+ * @author Luke Visinoni <luke.visinoni@gmail.com>
  * @package Csv
  * @license GNU Lesser General Public License
  * @version 0.1

@@ -5,14 +5,17 @@
  * This is a Csv Dialect - it tells readers and writers the format of a csv file
  * Please read the LICENSE file
  * @copyright Luke Visinoni <luke.visinoni@gmail.com>
- * @author Luke Visinoni <luke@mc2design.com>
+ * @author Luke Visinoni <luke.visinoni@gmail.com>
  * @package Csv
  * @license GNU Lesser General Public License
  * @version 0.1
  */
 
 /**
- * Tells readers and writes the format of a csv file
+ * Tells readers and writes the format of a csv file. No properties of this class should be specific
+ * to a certain csv file. It is tempting to add things like column-to-header mapping inside of this
+ * class, but this ties a dialect too closely to a specific csv file. I'd like to avoid that. This
+ * class should be as generic as possible. 
  * @package Csv
  */
 class Csv_Dialect

@@ -5,7 +5,7 @@
  * This is a csv writer - basically it writest a csv file from an array
  * Please read the LICENSE file
  * @copyright Luke Visinoni <luke.visinoni@gmail.com>
- * @author Luke Visinoni <luke@mc2design.com>
+ * @author Luke Visinoni <luke.visinoni@gmail.com>
  * @package Csv
  * @license GNU Lesser General Public License
  * @version 0.1
