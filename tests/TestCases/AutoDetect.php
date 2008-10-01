@@ -47,7 +47,7 @@ class Test_Of_Csv_AutoDetect extends UnitTestCase
     public function test_Detect_Throws_Exception_If_Data_Sample_Too_Short() {
     
         $data = "I am a piece of data without|||| any delimiters or anything";
-        $this->expectException(new Csv_Exception_DataSampleTooShort('You must provide at least ten lines in your sample data'));
+        $this->expectException(new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data'));
         $detecter = new Csv_AutoDetect();
         $detecter->detect($data);
     

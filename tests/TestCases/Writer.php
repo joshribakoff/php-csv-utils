@@ -1,10 +1,7 @@
 <?php
-
-require_once 'Csv/Exception/CannotAccessFile.php';
-
+require_once 'Csv/Exception/FileNotFound.php';
 Mock::Generate('Csv_Dialect', 'Mock_Dialect');
 Mock::Generate('Csv_Dialect', 'Mock_Dialect_Two');
-
 /**
  * Csv Writer unit tests
  */
@@ -105,7 +102,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
     public function test_Csv_Writer_Throws_Exception_If_Cant_Write() {
     
         $path = './';
-        $this->expectException(new Csv_Exception_CannotAccessFile(sprintf('Unable to create/access file: "%s".', $path)));
+        $this->expectException(new Csv_Exception_FileNotFound(sprintf('Unable to create/access file: "%s".', $path)));
         $writer = new Csv_Writer($path);
         $writer->writeRow(array('one','two','three'));
     
@@ -222,7 +219,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
     public function test_Writer_WriteRows_Accepts_Reader() {
     
         file_put_contents($this->file, "1,2,3\r\n4,5,6\r\n7,8,9\r\n"); // test csv file
-        $reader = new Csv_Reader($this->file);
+        $reader = new Csv_Reader($this->file, new Csv_Dialect());
         $writer = new Csv_Writer($this->file2);
         $dialect = $writer->getDialect();
         $dialect->delimiter = "\t";

@@ -12,7 +12,7 @@
  */
 require_once 'Csv/Dialect.php';
 require_once 'Csv/Exception.php';
-require_once 'Csv/Exception/CannotAccessFile.php';
+require_once 'Csv/Exception/FileNotFound.php';
 /**
  * Provides an easy-to-use interface for writing csv-formatted text files. It
  * does not make use of the PHP5 function fputcsv. It provides quite a bit of
@@ -137,7 +137,7 @@ class Csv_Writer
         if (!is_resource($this->handle)) {
             if (!$this->handle = @fopen($this->filename, 'wb')) {
                 // if parser reaches this, the file couldnt be created
-                throw new Csv_Exception_CannotAccessFile(sprintf('Unable to create/access file: "%s".', $this->filename));
+                throw new Csv_Exception_FileNotFound(sprintf('Unable to create/access file: "%s".', $this->filename));
             }
         }
         $rows = array();

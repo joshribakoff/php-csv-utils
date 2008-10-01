@@ -1,6 +1,5 @@
 <?php
 require_once 'Exception/CannotDetermineDialect.php';
-require_once 'Exception/DataSampleTooShort.php';
 require_once 'Reader/String.php';
 /**
  * CSV Utils - detecter
@@ -33,7 +32,7 @@ class Csv_AutoDetect
     public function detect($data) {
 
     	if (strlen($data)==0) {
-            throw new Csv_Exception_DataSampleTooShort('You must provide at least ten lines in your sample data');/*
+            throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');/*
     		// this is an empty file - provide some sane defaults
 	        $dialect = new Csv_Dialect();
 	        $dialect->delimiter = ',';
@@ -191,7 +190,7 @@ class Csv_AutoDetect
     protected function guessDelim($data, $linefeed, $quotechar) {
     
         $count = count(explode($linefeed, $data));
-        if ($count < 10) throw new Csv_Exception_DataSampleTooShort('You must provide at least ten lines in your sample data');
+        if ($count < 10) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
 	    $charcount = count_chars($data, 1);
 	    
 	    $filtered = array();
