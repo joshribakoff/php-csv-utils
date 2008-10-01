@@ -82,6 +82,14 @@ class Csv_Dialect
                 $this->{$property} = $value;
             }
         }
-     
+    
+    }
+    
+    public function __toString() {
+    
+        ob_start();
+        var_dump($this);
+        return ob_get_clean();
+    
     }
 }
