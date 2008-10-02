@@ -186,7 +186,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
     }*/
     
     /**
-     * Test that class is capable of maintaining its state / position 
+     * 
      */
     public function test_quotes_get_removed_from_data() {
     
@@ -253,7 +253,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
     
     }
     
-    /*public function test_Reader_Throws_Exception_If_Dialect_Cant_Be_Determined() {
+    public function test_Reader_Throws_Exception_If_Dialect_Cant_Be_Determined() {
     
         $data = "I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
@@ -272,7 +272,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->expectException(new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.'));
         $reader = new Csv_Reader_String($data);
     
-    }*/
+    }
     
     public function test_Detect_Throws_Exception_If_Data_Sample_Too_Short() {
     
