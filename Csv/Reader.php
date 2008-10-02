@@ -87,6 +87,7 @@ class Csv_Reader implements Iterator, Countable
         if (is_null($dialect)) {
             $detecter = new Csv_AutoDetect;
             $dialect = $detecter->detect(file_get_contents($path)); // will throw an exception if it fails, so we don't need to do anything
+            // $dialect = $this->autoDetectFile($path);
         }
         $this->dialect = $dialect;
         $this->rewind();
@@ -162,7 +163,7 @@ class Csv_Reader implements Iterator, Countable
     
     }
     /**
-     * Returns the current row and calls next()
+     * Returns the current row and calls advances internal pointer
      * 
      * @access public
      */
@@ -177,12 +178,13 @@ class Csv_Reader implements Iterator, Countable
      * Loads the current row into memory
      * 
      * @access protected
-     * @todo I can't get fgetcsv to choke on anything, so throwing an exception here may not be possible
+     * @todo Don't use fgetcsv - parse the file manually. I think this would allow much more control
      */
     protected function loadRow() {
     
         if (!$this->current = fgetcsv($this->handle, self::MAX_ROW_SIZE, $this->dialect->delimiter, $this->dialect->quotechar)) {
-            //sthrow new Csv_Exception('Invalid format for row ' . $this->position);
+            // we actually don't want to throw an exception... that's a little dramatic. maybe log it?
+            // throw new Csv_Exception('Invalid format for row ' . $this->position);
         }
         if (
             $this->dialect->escapechar !== ''
@@ -284,7 +286,7 @@ class Csv_Reader implements Iterator, Countable
      */
     public function current() {
     
-        if (empty($this->header)) return $this->current;
+        if (empty($this->header) || !$this->current) return $this->current;
         else return array_combine($this->header, $this->current);
     
     }
