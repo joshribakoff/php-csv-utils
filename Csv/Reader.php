@@ -85,12 +85,8 @@ class Csv_Reader implements Iterator, Countable
         $this->handle = fopen($this->path, 'rb');
         if ($this->handle === false) throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
         if (is_null($dialect)) {
-            try {
-                $detecter = new Csv_AutoDetect;
-                $dialect = $detecter->detect(file_get_contents($path));
-            } catch (Csv_Exception_DataSampleTooShort $e) {
-                $dialect = new Csv_Dialect;
-            }
+            $detecter = new Csv_AutoDetect;
+            $dialect = $detecter->detect(file_get_contents($path)); // will throw an exception if it fails, so we don't need to do anything
         }
         $this->dialect = $dialect;
         $this->rewind();
@@ -139,7 +135,7 @@ class Csv_Reader implements Iterator, Countable
      */
     protected function setPath($path) {
     
-        $this->path = realpath($path);
+        if (file_exists($path)) $this->path = $path;
     
     }
     /**
@@ -216,9 +212,11 @@ class Csv_Reader implements Iterator, Countable
     public function toArray() {
     
         $return = array();
-        foreach ($this as $row) {
+        $this->rewind();
+        while ($row = $this->getRow()) {
             $return[] = $row;
         }
+        
         // be kinds, please rewind
         $this->rewind();
         return $return;

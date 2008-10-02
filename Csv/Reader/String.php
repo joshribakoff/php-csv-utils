@@ -1,6 +1,6 @@
 <?php
-class Csv_Reader_String extends Csv_Reader
-{
+class Csv_Reader_String extends Csv_Reader {
+
     /**
      * 
      */
@@ -15,4 +15,5 @@ class Csv_Reader_String extends Csv_Reader
         $this->rewind();
     
     }
+
 }

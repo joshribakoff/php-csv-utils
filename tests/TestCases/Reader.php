@@ -75,7 +75,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
     
         $file = './data/tab-200.csv';
         $reader = new Csv_Reader($this->files['tab-200']);
-        $this->assertEqual($reader->getPath(), realpath($file));
+        $this->assertEqual($reader->getPath(), $file);
     
     }
     
@@ -122,6 +122,17 @@ class Test_Of_Csv_Reader extends UnitTestCase
     public function test_Csv_Reader_Is_Iterable() {
     
         $reader = new Csv_Reader($this->files['comma-200']);
+        $correct = 0;
+        foreach ($reader as $row) {
+        
+            if (count($row) == 12) $correct++;
+        
+        }
+        $this->assertEqual($correct, 200);
+        
+        // now we do Csv_Reader_String
+        
+        $reader = new Csv_Reader_String(file_get_contents($this->files['comma-200']));
         $correct = 0;
         foreach ($reader as $row) {
         
@@ -223,11 +234,11 @@ class Test_Of_Csv_Reader extends UnitTestCase
     public function test_Reader_String() {
     
         $sample = "";
-        for ($i = 0; $i <= 10; $i++) {
-            $sample .= "this,is,some,test,data\n";
+        for ($i = 0; $i < 10; $i++) {
+            $sample .= "this,is,some,test,data,$i\n";
         }
-        $data = new Csv_Reader_String($sample);
-        $this->assertEqual($data->count(), 10);
+        $reader = new Csv_Reader_String($sample);
+        $this->assertEqual($reader->count(), 10);
     
     }
     
@@ -247,4 +258,59 @@ class Test_Of_Csv_Reader extends UnitTestCase
     
     }
     
+    /** Moved from Csv_AutoDetect **/
+
+    /**
+     * 
+     */
+    public function test_Reader_Automatically_Detects_Dialect() {
+    
+        $reader = new Csv_Reader('data/pipe-100.csv'); // didnt provide a dialect, so it should detect format
+        $dialect = $reader->getDialect();
+        $this->assertIsA($dialect, 'Csv_Dialect');
+        $this->assertEqual($dialect->delimiter, "|");
+        $this->assertEqual($dialect->quotechar, '"');
+        $this->assertEqual($dialect->quoting, Csv_Dialect::QUOTE_NONE);
+    
+    }
+    /*
+    public function test_Reader_Throws_Exception_If_Dialect_Cant_Be_Determined() {
+    
+        $data = "I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
+                 format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf";
+        $this->expectException(new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.'));
+        $reader = new Csv_Reader_String($data);
+    
+    }
+    
+    public function test_Detect_Throws_Exception_If_Data_Sample_Too_Short() {
+    
+        $data = "I am a piece of data without|||| any delimiters or anything";
+        $this->expectException(new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data'));
+        $detecter = new Csv_AutoDetect();
+        $detecter->detect($data);
+    
+    }
+    
+    public function test_Detect_Can_Detect_Header() {
+    
+        $data = file(realpath('data/tab-200.csv'));
+        $sample1 = implode("", array_slice($data, 0, 20));
+        $sample2 = implode("", array_slice($data, 1, 21));
+        $sample3 = implode("\n", file(realpath("data/excel-formatted.csv")));
+        $sample4 = implode("", file(realpath("data/pipe-100.csv")));
+        $detecter = new Csv_AutoDetect();
+        $this->assertTrue($detecter->hasHeader($sample1));
+        $this->assertFalse($detecter->hasHeader($sample2));
+        $this->assertFalse($detecter->hasHeader($sample3));
+        $this->assertTrue($detecter->hasHeader($sample4));
+    
+    }
+    public function test_Detect_Doesnt_Use_More_Than_Twenty_Lines() {
+    
+        //$file1 = file(realpath('data/tab-200.csv'));
+    
+    }
+    public function test_Detect_Can_Accept_String_Or_Any_Csv_Reader() {
+    }*/
 }
