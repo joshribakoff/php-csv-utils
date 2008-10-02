@@ -32,18 +32,14 @@ class Csv_AutoDetect
     public function detect($data) {
 
     	if (strlen($data)==0) {
-            throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');/*
-    		// this is an empty file - provide some sane defaults
-	        $dialect = new Csv_Dialect();
-	        $dialect->delimiter = ',';
-	        $dialect->quotechar = '"';
-	        $dialect->quoting = Csv_Dialect::QUOTE_MINIMAL;
-	        $dialect->lineterminator = "\r\n";
-	        return $dialect;*/
+            throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
     	}
         
     	// this is a non-empty file
     	$linefeed = $this->guessLinefeed($data);
+        $count = count(explode($linefeed, $data));
+        // threshold is ten, so add one to account for extra linefeed that is supposed to be at the end
+        if ($count < 11) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
     	
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
         
@@ -190,8 +186,6 @@ class Csv_AutoDetect
     // @todo - understand what's going on here (I haven't yet had a chance to really look at it)
     protected function guessDelim($data, $linefeed, $quotechar) {
     
-        $count = count(explode($linefeed, $data));
-        if ($count < 10) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
 	    $charcount = count_chars($data, 1);
 	    
 	    $filtered = array();

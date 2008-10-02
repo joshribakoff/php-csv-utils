@@ -16,6 +16,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->files['pipe-100'] = './data/pipe-100.csv';
         $this->files['comma-200'] = './data/comma-200.csv';
         $this->files['blank-lines-200'] = './data/blank-lines-200.csv';
+        $this->files['too-short'] = './data/too-short.csv';
         $this->tempfile = './data/tmp.csv';
     
     }
@@ -275,10 +276,8 @@ class Test_Of_Csv_Reader extends UnitTestCase
     
     public function test_Detect_Throws_Exception_If_Data_Sample_Too_Short() {
     
-        $data = "I am a piece of data without|||| any delimiters or anything";
         $this->expectException(new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data'));
-        $detecter = new Csv_AutoDetect();
-        $detecter->detect($data);
+        $reader = new Csv_Reader($this->files['too-short']);
     
     }
     

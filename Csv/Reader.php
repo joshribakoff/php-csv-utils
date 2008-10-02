@@ -85,12 +85,24 @@ class Csv_Reader implements Iterator, Countable
         $this->handle = fopen($this->path, 'rb');
         if ($this->handle === false) throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
         if (is_null($dialect)) {
-            $detecter = new Csv_AutoDetect;
-            $dialect = $detecter->detect(file_get_contents($path)); // will throw an exception if it fails, so we don't need to do anything
-            // $dialect = $this->autoDetectFile($path);
+            $dialect = $this->autoDetectFile($path);
         }
         $this->dialect = $dialect;
         $this->rewind();
+    
+    }
+    
+    public function autoDetectFile($filename) {
+    
+        $data = file_get_contents($filename);
+        return $this->autoDetect($data);
+    
+    }
+    
+    public function autoDetect($data) {
+    
+        $autodetect = new Csv_AutoDetect;
+        return $autodetect->detect($data);
     
     }
     /**
