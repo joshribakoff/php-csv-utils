@@ -272,7 +272,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $reader = new Csv_Reader_String($data);
     
     }*/
-    /*
+    
     public function test_Detect_Throws_Exception_If_Data_Sample_Too_Short() {
     
         $data = "I am a piece of data without|||| any delimiters or anything";
@@ -296,13 +296,6 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertTrue($detecter->hasHeader($sample4));
     
     }
-    public function test_Detect_Doesnt_Use_More_Than_Twenty_Lines() {
-    
-        //$file1 = file(realpath('data/tab-200.csv'));
-    
-    }
-    public function test_Detect_Can_Accept_String_Or_Any_Csv_Reader() {
-    }*/
     
     /** Stuff I should move into Csv_Reader_String tests **/
     
