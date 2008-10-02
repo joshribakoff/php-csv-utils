@@ -187,6 +187,7 @@ class Csv_AutoDetect
      * @access protected
      * @return mixed If a delimiter can be found it is returned otherwise false is returned
      */
+    // @todo - understand what's going on here (I haven't yet had a chance to really look at it)
     protected function guessDelim($data, $linefeed, $quotechar) {
     
         $count = count(explode($linefeed, $data));
@@ -280,7 +281,7 @@ class Csv_AutoDetect
         return $delim;
     
     }
-
+    // @todo - understand what's going on here (I haven't yet had a chance to really look at it)
 	protected function deviation ($array){
     
 	    $avg = array_sum($array)/count($array);
@@ -291,7 +292,7 @@ class Csv_AutoDetect
 	    return $deviation;
 	
     }    
-
+    // @todo - maybe rewrite this? it seems to be not working every time
     protected function guessLinefeed($data) {
     
     	$charcount = count_chars($data);

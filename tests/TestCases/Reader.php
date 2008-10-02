@@ -129,17 +129,6 @@ class Test_Of_Csv_Reader extends UnitTestCase
         
         }
         $this->assertEqual($correct, 200);
-        
-        // now we do Csv_Reader_String
-        
-        $reader = new Csv_Reader_String(file_get_contents($this->files['comma-200']));
-        $correct = 0;
-        foreach ($reader as $row) {
-        
-            if (count($row) == 12) $correct++;
-        
-        }
-        $this->assertEqual($correct, 200);
     
     }
     
@@ -231,17 +220,6 @@ class Test_Of_Csv_Reader extends UnitTestCase
     
     }
     
-    public function test_Reader_String() {
-    
-        $sample = "";
-        for ($i = 0; $i < 10; $i++) {
-            $sample .= "this,is,some,test,data,$i\n";
-        }
-        $reader = new Csv_Reader_String($sample);
-        $this->assertEqual($reader->count(), 10);
-    
-    }
-    
     public function test_Set_Header() {
     
         $reader = new Csv_Reader($this->files['comma-200']);
@@ -273,16 +251,28 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($dialect->quoting, Csv_Dialect::QUOTE_NONE);
     
     }
-    /*
-    public function test_Reader_Throws_Exception_If_Dialect_Cant_Be_Determined() {
+    
+    /*public function test_Reader_Throws_Exception_If_Dialect_Cant_Be_Determined() {
     
         $data = "I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
+                 format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
+                 I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
+                 format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
+                 I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
+                 format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
+                 I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
+                 format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
+                 I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
+                 format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
+                 I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
+                 format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
+                 I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf";
         $this->expectException(new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.'));
         $reader = new Csv_Reader_String($data);
     
-    }
-    
+    }*/
+    /*
     public function test_Detect_Throws_Exception_If_Data_Sample_Too_Short() {
     
         $data = "I am a piece of data without|||| any delimiters or anything";
@@ -313,4 +303,36 @@ class Test_Of_Csv_Reader extends UnitTestCase
     }
     public function test_Detect_Can_Accept_String_Or_Any_Csv_Reader() {
     }*/
+    
+    /** Stuff I should move into Csv_Reader_String tests **/
+    
+    /**
+     * Tests that you can loop through Csv_Reader as if it was an array
+     * This is the best way I can think of to test that its iterable
+     * Basically I just test that it loops through and gives all good results
+     */
+    public function test_Csv_Reader_String_Is_Iterable() {
+    
+        $reader = new Csv_Reader_String(file_get_contents($this->files['comma-200']));
+        $correct = 0;
+        foreach ($reader as $row) {
+        
+            if (count($row) == 12) $correct++;
+        
+        }
+        $this->assertEqual($correct, 200);
+    
+    }
+    
+    public function test_Reader_String() {
+    
+        $sample = "";
+        for ($i = 0; $i < 10; $i++) {
+            $sample .= "this,is,some,test,data,$i\n";
+        }
+        $reader = new Csv_Reader_String($sample);
+        $this->assertEqual($reader->count(), 10);
+    
+    }
+
 }
