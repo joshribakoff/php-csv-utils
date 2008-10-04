@@ -17,10 +17,6 @@ require_once 'Csv/AutoDetect.php';
  * Provides an easy-to-use interface for reading csv-formatted text files. It
  * makes use of the function fgetcsv. It provides quite a bit of flexibility.
  * You can specify just about everything about how it should read a csv file
- * @todo Research the ArrayIterator class and see if it is the best choice for
- *       this and if I'm even using it correctly. There are quite a few methods 
- *       that are inherited that may or may not work. It would be cool if we
- *       could use 
  * @package Csv
  * @subpackage Csv_Reader
  */
