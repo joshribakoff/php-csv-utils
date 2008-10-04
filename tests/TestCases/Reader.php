@@ -323,7 +323,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
     
         $sample = "";
         for ($i = 0; $i < 10; $i++) {
-            $sample .= "this,is,some,test,data,$i\n";
+            $sample .= "this,is,some,test,data,$i\r\n";
         }
         $reader = new Csv_Reader_String($sample);
         $this->assertEqual($reader->count(), 10);

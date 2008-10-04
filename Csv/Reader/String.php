@@ -8,7 +8,7 @@ class Csv_Reader_String extends Csv_Reader {
     public function __construct($string, Csv_Dialect $dialect = null) {
     
         if (is_null($dialect)) {
-            $dialect = $this->autoDetectFile($path);
+            $dialect = $this->autoDetect($string);
         }
         $this->dialect = $dialect;
         // if last character isn't a line-break add one
