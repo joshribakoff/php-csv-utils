@@ -55,7 +55,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
     
     }
     /**
-     * Writer should create the file if it doesnt exist
+     * 
      */
     public function test_Csv_Writer_Accepts_Filename_In_Constructor() {
     
@@ -65,7 +65,7 @@ class Test_Of_Csv_Writer extends UnitTestCase
     
     }
     /**
-     * Writer should create the file if it doesnt exist
+     * 
      */
     public function test_Csv_Writer_Uses_Default_Dialect() {
     

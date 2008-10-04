@@ -128,9 +128,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $reader = new Csv_Reader($this->files['comma-200']);
         $correct = 0;
         foreach ($reader as $row) {
-        
             if (count($row) == 12) $correct++;
-        
         }
         $this->assertEqual($correct, 200);
     
@@ -224,22 +222,6 @@ class Test_Of_Csv_Reader extends UnitTestCase
     
     }
     
-    public function test_Set_Header() {
-    
-        $reader = new Csv_Reader($this->files['comma-200']);
-        $header = array('name', 'date', 'email', 'address_1', 'city', 'state', 'zip', 'country', 'phone', 'fax', 'keywords', 'order_id');
-        $reader->setHeader($header);
-        $row = $reader->getRow();
-        $this->assertEqual(array_keys($row), $header);
-        $row = $reader->current();
-        $this->assertEqual(array_keys($row), $header);
-        $row = $reader->next();
-        $this->assertEqual(array_keys($row), $header);
-        $allrows = $reader->toArray();
-        $this->assertEqual(array_keys(current($allrows)), $header);
-    
-    }
-    
     /** Moved from Csv_AutoDetect **/
 
     /**
@@ -311,9 +293,7 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $reader = new Csv_Reader_String(file_get_contents($this->files['comma-200']));
         $correct = 0;
         foreach ($reader as $row) {
-        
             if (count($row) == 12) $correct++;
-        
         }
         $this->assertEqual($correct, 200);
     
@@ -329,5 +309,42 @@ class Test_Of_Csv_Reader extends UnitTestCase
         $this->assertEqual($reader->count(), 10);
     
     }
+    
+    public function test_Set_Header() {
+    
+        // the comma-200 file doesn't have a header, so it will be indexed numerically
+        $reader = new Csv_Reader($this->files['comma-200']);
+        $header = array('name', 'date', 'email', 'address_1', 'city', 'state', 'zip', 'country', 'phone', 'fax', 'keywords', 'order_id');
+        $reader->setHeader($header);
+        $row = $reader->getRow();
+        $this->assertEqual(array_keys($row), $header);
+        $row = $reader->current();
+        $this->assertEqual(array_keys($row), $header);
+        $row = $reader->next();
+        $this->assertEqual(array_keys($row), $header);
+        $allrows = $reader->toArray();
+        $this->assertEqual(array_keys(current($allrows)), $header);
+    
+    }
+    
+    /**
+     * Header should be detected automatically by Csv_AutoDetect, but if you want to be
+     * absolutely sure that the reader knows there's a header, you can call $reader->hasHeader(true)
+     * and it will ignore the dialect
 
+    public function test_Reader_DetectHeader() {
+    
+        // tab-200 has a header, so it should detect that
+        $reader = new Csv_Reader($this->files['tab-200']);
+        // turn on auto detect - if the file has a header, 
+        $reader->detectHeader();
+        
+        // comma-200 doesn't have a header, so it should detect that
+        $reader = new Csv_Reader($this->files['tab-200']);
+        // 
+        $reader->detectHeader();
+        
+    
+    }
+     */
 }
