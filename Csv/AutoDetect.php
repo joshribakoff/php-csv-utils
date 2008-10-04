@@ -1,6 +1,7 @@
 <?php
-require_once 'Exception/CannotDetermineDialect.php';
-require_once 'Reader/String.php';
+require_once 'Csv/Exception/CannotDetermineDialect.php';
+require_once 'Csv/Reader.php';
+require_once 'Csv/Reader/String.php';
 /**
  * CSV Utils - detecter
  * 

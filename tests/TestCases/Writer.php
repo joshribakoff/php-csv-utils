@@ -1,5 +1,6 @@
 <?php
 require_once 'Csv/Exception/FileNotFound.php';
+require_once 'Csv/Writer.php';
 Mock::Generate('Csv_Dialect', 'Mock_Dialect');
 Mock::Generate('Csv_Dialect', 'Mock_Dialect_Two');
 /**

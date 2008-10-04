@@ -11,6 +11,8 @@
 
 // set_include_path('/path/to/simpletest' . get_include_path());
 
+
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath('../'));
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -41,18 +43,10 @@ function make_table($headers, $rows) {
     echo "</table>\n";
 }
 
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath('../'));
-
 // include simpletest classes
 require_once 'simpletest/unit_tester.php';
 require_once 'simpletest/reporter.php';
 require_once 'simpletest/mock_objects.php';
-
-// include classes we are testing
-require_once 'Csv/Reader.php';
-require_once 'Csv/Writer.php';
-require_once 'Csv/AutoDetect.php';
-require_once 'Csv/Dialect.php';
 
 // include all tests
 require_once 'TestCases/Reader.php';

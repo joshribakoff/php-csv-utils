@@ -1,7 +1,10 @@
 <?php
+
 Mock::Generate('Csv_Dialect', 'Mock_Dialect');
 Mock::Generate('Csv_Dialect', 'Mock_Dialect_Two');
+
 require_once 'Csv/Dialect/Excel.php';
+require_once 'Csv/Reader/String.php';
 /**
  * Csv Reader unit tests
  */

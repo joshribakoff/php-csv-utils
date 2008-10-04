@@ -10,9 +10,9 @@
  * @license GNU Lesser General Public License
  * @version 0.1
  */
-require_once 'Exception/FileNotFound.php';
-require_once 'Dialect.php';
-require_once 'AutoDetect.php';
+require_once 'Csv/Exception/FileNotFound.php';
+require_once 'Csv/Dialect.php';
+require_once 'Csv/AutoDetect.php';
 /**
  * Provides an easy-to-use interface for reading csv-formatted text files. It
  * makes use of the function fgetcsv. It provides quite a bit of flexibility.

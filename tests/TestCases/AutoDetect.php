@@ -1,8 +1,4 @@
 <?php
-
-require_once 'Csv/Exception.php';
-require_once 'Csv/Exception/CannotDetermineDialect.php';
-
 /**
  * Csv Writer unit tests
  */
