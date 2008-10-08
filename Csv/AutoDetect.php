@@ -1,7 +1,5 @@
 <?php
 require_once 'Csv/Exception/CannotDetermineDialect.php';
-require_once 'Csv/Reader.php';
-require_once 'Csv/Reader/String.php';
 /**
  * CSV Utils - detecter
  * 
@@ -18,6 +16,7 @@ require_once 'Csv/Reader/String.php';
  * Attempts to deduce the format of a csv file
  * 
  * @package Csv
+ * @deprecated In favor of just use Csv_Reader::getDialect() and Csv_Reader::detectHasHeader()
  */
 class Csv_AutoDetect
 {

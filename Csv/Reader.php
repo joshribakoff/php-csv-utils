@@ -12,7 +12,7 @@
  */
 require_once 'Csv/Exception/FileNotFound.php';
 require_once 'Csv/Dialect.php';
-require_once 'Csv/AutoDetect.php';
+// require_once 'Csv/AutoDetect.php';
 /**
  * Provides an easy-to-use interface for reading csv-formatted text files. It
  * makes use of the function fgetcsv. It provides quite a bit of flexibility.
@@ -71,8 +71,7 @@ class Csv_Reader implements Iterator, Countable
      * Class constructor
      *
      * @param string Path to csv file we want to open
-     * @param Csv_Dialect
-     * @param boolean If set to false, don't treat the first row as headers - defaults to true
+     * @param Csv_Dialect If a dialect is not provided, Csv_Reader will attempt to guess the file's dialect
      * @throws Csv_Exception_FileNotFound
      */
     public function __construct($path, Csv_Dialect $dialect = null) {
