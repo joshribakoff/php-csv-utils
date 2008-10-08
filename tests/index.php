@@ -12,7 +12,7 @@
 // set_include_path('/path/to/simpletest' . get_include_path());
 
 
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath('../'));
+set_include_path(realpath('../') . PATH_SEPARATOR . get_include_path());
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -51,15 +51,15 @@ require_once 'simpletest/mock_objects.php';
 // include all tests
 require_once 'TestCases/Reader.php';
 require_once 'TestCases/Writer.php';
-//require_once 'TestCases/AutoDetect.php';
+require_once 'TestCases/AutoDetect.php';
 require_once 'TestCases/Dialect.php';
 require_once 'TestCases/Docs.php';
 
 // run tests in html reporter
-$test = new GroupTest(/*'Core CSV Utilities Tests'*/);
+$test = new GroupTest('Core CSV Utilities Tests');
 $test->addTestCase(new Test_Of_Csv_Reader);
 $test->addTestCase(new Test_Of_Csv_Writer);
-//$test->addTestCase(new Test_Of_Csv_AutoDetect);
+$test->addTestCase(new Test_Of_Csv_AutoDetect);
 $test->addTestCase(new Test_Of_Csv_Dialect);
 $test->addTestCase(new Test_Of_Csv_Docs);
 if (TextReporter::inCli()) {
