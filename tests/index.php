@@ -53,13 +53,15 @@ require_once 'TestCases/Reader.php';
 require_once 'TestCases/Writer.php';
 //require_once 'TestCases/AutoDetect.php';
 require_once 'TestCases/Dialect.php';
+require_once 'TestCases/Docs.php';
 
 // run tests in html reporter
-$test = new GroupTest('Core CSV Utilities Tests');
+$test = new GroupTest(/*'Core CSV Utilities Tests'*/);
 $test->addTestCase(new Test_Of_Csv_Reader);
 $test->addTestCase(new Test_Of_Csv_Writer);
 //$test->addTestCase(new Test_Of_Csv_AutoDetect);
 $test->addTestCase(new Test_Of_Csv_Dialect);
+$test->addTestCase(new Test_Of_Csv_Docs);
 if (TextReporter::inCli()) {
     exit ($test->run(new TextReporter()) ? 0 : 1);
 }
