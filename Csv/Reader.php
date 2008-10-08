@@ -75,7 +75,7 @@ class Csv_Reader implements Iterator, Countable
      * @param boolean If set to false, don't treat the first row as headers - defaults to true
      * @throws Csv_Exception_FileNotFound
      */
-    public function __construct($path, Csv_Dialect $dialect = null/*, $skip_empty_rows = false*/) {
+    public function __construct($path, Csv_Dialect $dialect = null) {
     
         // open the file
         $this->setPath($path);
@@ -125,9 +125,22 @@ class Csv_Reader implements Iterator, Countable
     
     }
     /**
-     * Change the dialect this csv reader is using
+     * 
+     * 
+     * @param boolean 
+     * @access public
+     */
+    public function hasHeader($flag = null) {
+    
+        return $this->dialect->hasHeader();
+    
+    }
+    /**
+     * Use this method if your csv file doesn't have a header row and you want the reader to pretend that it does,
+     * pass an array of column names in the order they appear in the csv file and it will return associative arrays
+     * with this array as keys
      *
-     * @param Csv_Dialect the current Csv_Dialect object
+     * @param array An array of column names you would like to use as the "header row"
      * @access public
      */
     public function setHeader($header) {

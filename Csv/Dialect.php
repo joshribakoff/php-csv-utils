@@ -53,11 +53,6 @@ class Csv_Dialect
      * @var string This is a remnant of me copying functionality from python's csv module
      * @todo Implement this
      */
-    public $doublequote;
-    /**
-     * @var string This is a remnant of me copying functionality from python's csv module
-     * @todo Implement this
-     */
     public $skipinitialspace;
     /**
      * @var boolean Set to true to ignore blank lines when reading
