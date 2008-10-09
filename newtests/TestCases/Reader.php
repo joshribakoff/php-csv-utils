@@ -3,6 +3,7 @@
  * Unit tests for all aspects of the Csv Reader
  */
 require_once 'Csv/Reader.php';
+require_once 'Csv/Exception/CannotDetermineDialect.php';
 
 class Test_Of_Csv_Reader extends UnitTestCase {
 
@@ -20,7 +21,7 @@ class Test_Of_Csv_Reader extends UnitTestCase {
      */
     public function testCsvReaderThrowsCannotDetermineDialectIfDataTooSmall() {
     
-        //$this->expectException(new Csv_Exception_CannotDetermineDialect('File does not exist or is not readable: "./data/nonexistant.csv".'));
+        $this->expectException(new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data.'));
         $reader = new Csv_Reader('./data/too-short.csv');
     
     }

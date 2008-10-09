@@ -12,7 +12,7 @@
  */
 require_once 'Csv/Exception/FileNotFound.php';
 require_once 'Csv/Dialect.php';
-// require_once 'Csv/AutoDetect.php';
+require_once 'Csv/Reader/String.php';
 /**
  * Provides an easy-to-use interface for reading csv-formatted text files. It
  * makes use of the function fgetcsv. It provides quite a bit of flexibility.
@@ -100,13 +100,10 @@ class Csv_Reader implements Iterator, Countable
     	// this is a non-empty file
         
     	$linefeed = $this->guessLinefeed($data);
-        /*
         $count = count(explode($linefeed, $data));
         // threshold is ten, so add one to account for extra linefeed that is supposed to be at the end
-        if ($count < 11) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
-    	
+        if ($count < 10) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data.');
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
-        
         if (!$quote) {
         	$quote = '"';
         }
@@ -123,7 +120,7 @@ class Csv_Reader implements Iterator, Countable
         $dialect->delimiter = $delim;
         $dialect->lineterminator = $linefeed;
         
-        return $dialect;*/
+        return $dialect;
     
     }
     /**
@@ -156,6 +153,105 @@ class Csv_Reader implements Iterator, Countable
     	}
     	// sane default: cr+lf
     	return "$cr$lf";
+    
+    }
+    /**
+     * Deduce the probable quoting style for this file
+     * 
+     * @author Special thanks to Edward on this method
+     */
+    protected function guessQuotingStyle($data, $quote, $delim, $linefeed) {
+    
+        // build temporary dialect to traverse through the data
+    	$dialect = new Csv_Dialect();
+    	$dialect->delimiter = $delim;
+    	$dialect->quotechar = $quote;
+    	$dialect->lineterminator = $linefeed;
+    	$lines = explode($linefeed, $data);
+    	$lines_processed = 0;
+        // Csv_Reader_String accepts raw csv data as a string
+        // there is an issue here because this extends the class we're inside right now
+        $reader = new Csv_Reader_String($data, $dialect);
+        $quotingstyle_count = array();
+        foreach ($reader as $parsedline) {
+            do {
+                // fetch next line until a non-empty line is found
+                $line = array_shift($lines);
+            } while (strlen($line) == 0);
+            // how many quotes are present in this line?
+            $quote_count = substr_count($line, $quote);
+            // how many quotes are in the data itself?
+            $quotecount_in_data = substr_count(implode("", $parsedline), $quote);
+            // how many columns are in this line?
+            $column_count = count($parsedline);
+            // default quoting style for this line: QUOTE_NONE
+            $quotingstyle = Csv_Dialect::QUOTE_NONE;
+            // determine this line's quoting style
+            if ($quote_count == 0 || $quote_count <= $quotecount_in_data) {
+                // there are no quotes, or there are less quotes than the number of quotes in the data
+                $quotingstyle = Csv_Dialect::QUOTE_NONE;
+            } elseif ($quote_count >= ($column_count * 2)) {
+                // the number of quotes is larger than, or equal to, the number of quotes 
+                // necessary to quote each column
+                $quotingstyle = Csv_Dialect::QUOTE_ALL;
+            } elseif ($quote_count >= $quotecount_in_data) {
+                // there are more quotes than the number of quotes in the data
+                $quotingstyle = Csv_Dialect::QUOTE_MINIMAL;
+            }
+            if (!array_key_exists($quotingstyle, $quotingstyle_count)) {
+                $quotingstyle_count[$quotingstyle] = 0;
+            }
+            $quotingstyle_count[$quotingstyle]++;
+            $lines_processed++;
+            if ($lines_processed > 15) {
+                // don't process the whole file - stop processing after a while
+                break;
+            }
+        }
+        
+        // return the quoting style that was used most often
+        asort($quotingstyle_count);
+        $guess = end(array_keys($quotingstyle_count));
+        
+    	return $guess;
+    
+    }
+    /**
+     * I copied this functionality from python's csv module. Basically, it looks
+     * for text enclosed by identical quote characters which are in turn surrounded
+     * by identical characters (the probable delimiter). If there is no quotes, the
+     * delimiter cannot be determined this way.
+     *
+     * @param string A piece of sample data used to deduce the format of the csv file
+     * @return array An array with the first value being the quote char and the second the delim
+     * @access protected
+     */
+    protected function guessQuoteAndDelim($data) {
+    
+        $patterns = array();
+        $patterns[] = '/([^\w\n"\']) ?(["\']).*?(\2)(\1)/'; 
+        $patterns[] = '/(?:^|\n)(["\']).*?(\1)([^\w\n"\']) ?/'; // dont know if any of the regexes starting here work properly
+        $patterns[] = '/([^\w\n"\']) ?(["\']).*?(\2)(?:^|\n)/';
+        $patterns[] = '/(?:^|\n)(["\']).*?(\2)(?:$|\n)/';
+        
+        foreach ($patterns as $pattern) {
+            if ($nummatches = preg_match_all($pattern, $data, $matches)) {
+                if ($matches) break;
+            }
+        }
+        
+        if (!$matches) return array("", null); // couldn't guess quote or delim
+        
+        $quotes = array_count_values($matches[2]);
+        arsort($quotes);
+        if ($quote = array_shift(array_flip($quotes))) {
+            $delims = array_count_values($matches[1]);
+            arsort($delims);
+            $delim = array_shift(array_flip($delims));
+        } else {
+            $quote = ""; $delim = null;
+        }
+        return array($quote, $delim);
     
     }
     /**
