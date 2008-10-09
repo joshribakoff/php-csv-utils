@@ -31,35 +31,7 @@ class Csv_AutoDetect
      */
     public function detect($data) {
 
-    	if (strlen($data)==0) {
-            throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
-    	}
-        
-    	// this is a non-empty file
-    	$linefeed = $this->guessLinefeed($data);
-        $count = count(explode($linefeed, $data));
-        // threshold is ten, so add one to account for extra linefeed that is supposed to be at the end
-        if ($count < 11) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
-    	
-        list($quote, $delim) = $this->guessQuoteAndDelim($data);
-        
-        if (!$quote) {
-        	$quote = '"';
-        }
-        
-        if (is_null($delim)) {
-            if (!$delim = $this->guessDelim($data, $linefeed, $quote)) {
-                throw new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.');
-            }
-        }
-        
-        $dialect = new Csv_Dialect();
-        $dialect->quotechar = $quote;
-        $dialect->quoting = $this->guessQuotingStyle($data, $quote, $delim, $linefeed);
-        $dialect->delimiter = $delim;
-        $dialect->lineterminator = $linefeed;
-        
-        return $dialect;
+
     
     }
     /**

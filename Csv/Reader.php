@@ -81,24 +81,81 @@ class Csv_Reader implements Iterator, Countable
         $this->handle = fopen($this->path, 'rb');
         if ($this->handle === false) throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
         if (is_null($dialect)) {
-            $dialect = $this->autoDetectFile($path);
+            // if dialect isn't specified in the constructor, the reader will attempt to figure out the format
+            $dialect = $this->determineDialect();
         }
         $this->dialect = $dialect;
         $this->rewind();
     
     }
+    /**
+     * Attempt to deduce the format of the file we're trying to read
+     *
+     * @return The current Csv_Dialect object
+     * @access public
+     */
+    protected function determineDialect() {
     
-    protected function autoDetectFile($filename) {
-    
-        $data = file_get_contents($filename);
-        return $this->autoDetect($data);
+        $data = file_get_contents($this->getPath());
+    	// this is a non-empty file
+        
+    	$linefeed = $this->guessLinefeed($data);
+        /*
+        $count = count(explode($linefeed, $data));
+        // threshold is ten, so add one to account for extra linefeed that is supposed to be at the end
+        if ($count < 11) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
+    	
+        list($quote, $delim) = $this->guessQuoteAndDelim($data);
+        
+        if (!$quote) {
+        	$quote = '"';
+        }
+        
+        if (is_null($delim)) {
+            if (!$delim = $this->guessDelim($data, $linefeed, $quote)) {
+                throw new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.');
+            }
+        }
+        
+        $dialect = new Csv_Dialect();
+        $dialect->quotechar = $quote;
+        $dialect->quoting = $this->guessQuotingStyle($data, $quote, $delim, $linefeed);
+        $dialect->delimiter = $delim;
+        $dialect->lineterminator = $linefeed;
+        
+        return $dialect;*/
     
     }
+    /**
+     * Deduce the probable line feed for this file
+     * 
+     * @author Special thanks to Edward on this method
+     */
+    protected function guessLinefeed($data) {
     
-    protected function autoDetect($data) {
-    
-        $autodetect = new Csv_AutoDetect;
-        return $autodetect->detect($data);
+        // get total number of all characters
+    	$charcount = count_chars($data);
+        // foreach ($charcount as $chr => $amt) print chr($chr) . ": $amt<BR>";
+    	$cr = "\r";
+    	$lf = "\n";
+    	// get total number of each type of line feed
+    	$count_cr = $charcount[ord($cr)];
+    	$count_lf = $charcount[ord($lf)];
+        // if both appear the same amount of times, it's likely that the line feed is \r\n
+        // this would be a lot more accurate if it didn't count newlines that were inside quotes
+    	if ($count_cr == $count_lf) {
+    		return "$cr$lf";
+    	}
+        // if carriage return is non-existant and line feed appears more than once, its probably a line feed
+    	if ($count_cr == 0 && $count_lf > 0) {
+    		return "$lf";
+    	}
+        // if line feed is non-existant and carriage return appears more than once, its probably a carriage return
+    	if ($count_lf == 0 && $count_cr > 0) {
+    		return "$cr";
+    	}
+    	// sane default: cr+lf
+    	return "$cr$lf";
     
     }
     /**
