@@ -2,7 +2,7 @@
 /**
  * CSV Utils
  * 
- * This is a csv writer - basically it writest a csv file from an array
+ * This is a csv writer - basically it writes a csv file from an array
  * Please read the LICENSE file
  * @copyright Luke Visinoni <luke.visinoni@gmail.com>
  * @author Luke Visinoni <luke.visinoni@gmail.com>
