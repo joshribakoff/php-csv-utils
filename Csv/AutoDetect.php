@@ -31,7 +31,32 @@ class Csv_AutoDetect
      */
     public function detect($data) {
 
-
+    	$linefeed = $this->guessLinefeed($data);
+		$data = rtrim($data, $linefeed);
+        $count = count(explode($linefeed, $data));
+        // threshold is ten, so add one to account for extra linefeed that is supposed to be at the end
+        if ($count < 10) {
+			throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
+		} else {
+		}
+        list($quote, $delim) = $this->guessQuoteAndDelim($data);
+        if (!$quote) {
+        	$quote = '"';
+        }
+        
+        if (is_null($delim)) {
+            if (!$delim = $this->guessDelim($data, $linefeed, $quote)) {
+                throw new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.');
+            }
+        }
+        
+        $dialect = new Csv_Dialect();
+        $dialect->quotechar = $quote;
+        $dialect->quoting = $this->guessQuotingStyle($data, $quote, $delim, $linefeed);
+        $dialect->delimiter = $delim;
+        $dialect->lineterminator = $linefeed;
+        
+        return $dialect;
     
     }
     /**
@@ -46,13 +71,13 @@ class Csv_AutoDetect
         $reader = new Csv_Reader_String($data, $this->detect($data));
         list($has_headers, $checked, $types, $lengths, $total_lines, $headers) = array(0, 0, array(), array(), $reader->count(), $reader->getRow());
         
-        if ($total_lines<=2) {
+        if ($total_lines <= 2) {
         	// please try again with a a larger file :)
         	return false;
         }
         
         $total_columns = count($headers);
-        foreach (range(0, $total_columns-1) as $key => $col) $types[$col] = null;
+        foreach (range(0, $total_columns - 1) as $key => $col) $types[$col] = null;
         // loop through each remaining rows
         while ($row = $reader->current()) {
             // no need to check more than 20 lines
@@ -154,39 +179,39 @@ class Csv_AutoDetect
      * @param string The data you would like to get the delimiter of
      * @access protected
      * @return mixed If a delimiter can be found it is returned otherwise false is returned
+     * @todo - understand what's going on here (I haven't yet had a chance to really look at it)
      */
-    // @todo - understand what's going on here (I haven't yet had a chance to really look at it)
     protected function guessDelim($data, $linefeed, $quotechar) {
     
 	    $charcount = count_chars($data, 1);
 	    
 	    $filtered = array();
-	    foreach ($charcount as $char=>$count) {
-	    	if ($char==ord($quotechar)) {
+	    foreach ($charcount as $char => $count) {
+	    	if ($char == ord($quotechar)) {
 	    		// exclude the quote char
 	    		continue;
 	    	}
-	    	if ($char==ord(" ")) {
+	    	if ($char == ord(" ")) {
 	    		// exclude spaces
 	    		continue;
 	    	}
-	    	if ($char>=ord("a") && $char<=ord("z")) {
+	    	if ($char >= ord("a") && $char <= ord("z")) {
 	    		// exclude a-z
 	    		continue;
 	    	}
-	    	if ($char>=ord("A") && $char<=ord("Z")) {
+	    	if ($char >= ord("A") && $char <= ord("Z")) {
 	    		// exclude A-Z
 	    		continue;
 	    	}
-	    	if ($char>=ord("0") && $char<=ord("9")) {
+	    	if ($char >= ord("0") && $char <= ord("9")) {
 	    		// exclude 0-9
 	    		continue;
 	    	}
-	    	if ($char==ord("\n") || $char==ord("\r")) {
+	    	if ($char == ord("\n") || $char == ord("\r")) {
 	    		// exclude linefeeds
 	    		continue;
 	    	}
-	    	$filtered[$char]=$count;
+	    	$filtered[$char] = $count;
 	    }
 	    
         // count every character on every line
@@ -206,7 +231,7 @@ class Csv_AutoDetect
             $frequency = array_intersect_key(count_chars($row, 1), $filtered); 
             
             // store the charcount along with the previous counts
-	        foreach ($frequency as $char=>$count) {
+	        foreach ($frequency as $char => $count) {
 	        	if (!array_key_exists($char, $tmp)) {
 	        		$tmp[$char] = array();
 	        	}
@@ -216,27 +241,27 @@ class Csv_AutoDetect
         
         // a potential delimiter must be present on every non-empty line 
         foreach ($tmp as $char=>$array) {
-        	if (count($array)<0.98*$linecount) {
+        	if (count($array) < 0.98 * $linecount) {
         		// ... so drop any delimiters that aren't
         		unset($tmp[$char]);
         	}
         }
         
-        foreach ($tmp as $char=>$array) {
+        foreach ($tmp as $char => $array) {
         	// a delimiter is very likely to occur the same amount of times on every line,
         	// so drop delimiters that have too much variation in their frequency
         	$dev = $this->deviation($array);
-        	if ($dev>0.5) { // threshold not scientifically determined or something
+        	if ($dev > 0.5) { // threshold not scientifically determined or something
         		unset($tmp[$char]);
         		continue;
         	}
         	
         	// calculate average number of appearances
-        	$tmp[$char] = array_sum($tmp[$char])/count($tmp[$char]);
+        	$tmp[$char] = array_sum($tmp[$char]) / count($tmp[$char]);
         }
         
         // now, prefer the delimiter with the highest average number of appearances
-        if (count($tmp)>0) {
+        if (count($tmp) > 0) {
 	        asort($tmp);
 	        $delim = chr(end(array_keys($tmp)));
         } else {
@@ -247,18 +272,26 @@ class Csv_AutoDetect
         return $delim;
     
     }
-    // @todo - understand what's going on here (I haven't yet had a chance to really look at it)
+    /**
+     * @todo - understand what's going on here (I haven't yet had a chance to really look at it)
+     */
 	protected function deviation ($array){
     
-	    $avg = array_sum($array)/count($array);
+	    $avg = array_sum($array) / count($array);
 	    foreach ($array as $value) {
-	        $variance[] = pow($value-$avg, 2);
+	        $variance[] = pow($value - $avg, 2);
 	    }
-	    $deviation = sqrt(array_sum($variance)/count($variance));
+	    $deviation = sqrt(array_sum($variance) / count($variance));
 	    return $deviation;
 	
     }    
-    // @todo - maybe rewrite this? it seems to be not working every time
+    /**
+    * Guess what the line feed character is, default to CR/LF
+	 * @access protected
+	 * @return string The line feed character(s)
+	 * @param $data string The raw CSV data
+     * @todo - maybe rewrite this? it seems to be not working every time
+     */
     protected function guessLinefeed($data) {
     
     	$charcount = count_chars($data);
@@ -268,13 +301,13 @@ class Csv_AutoDetect
     	$count_cr = $charcount[ord($cr)];
     	$count_lf = $charcount[ord($lf)];
         
-    	if ($count_cr==$count_lf) {
+    	if ($count_cr == $count_lf) {
     		return "$cr$lf";
     	}
-    	if ($count_cr==0 && $count_lf>0) {
+    	if ($count_cr == 0 && $count_lf > 0) {
     		return "$lf";
     	}
-    	if ($count_lf==0 && $count_cr>0) {
+    	if ($count_lf == 0 && $count_cr > 0) {
     		return "$cr";
     	}
         
@@ -282,7 +315,15 @@ class Csv_AutoDetect
     	return "$cr$lf";
     
     }
-    
+    /**
+     * Guess what the quoting style is, default to none
+	 * @access protected
+	 * @return integer (quoting style constant qCal_Dialect::QUOTE_NONE)
+	 * @param $data string The raw CSV data
+	 * @param $quote string The quote character
+	 * @param $delim string The delimiter character
+	 * @param $linefeed string The line feed character
+     */
     protected function guessQuotingStyle($data, $quote, $delim, $linefeed) {
     
     	$dialect = new Csv_Dialect();
@@ -303,13 +344,13 @@ class Csv_AutoDetect
         		$line = array_shift($lines);
         	} while (strlen($line)==0);
             
-        	// how much quotes are present in this line?
+        	// how many quotes are present in this line?
         	$quote_count = substr_count($line, $quote);
         	
-        	// how much quotes are in the data itself?
+        	// how many quotes are in the data itself?
         	$quotecount_in_data = substr_count(implode("", $parsedline), $quote);
         	
-        	// how much columns are in this line?
+        	// how many columns are in this line?
         	$column_count = count($parsedline);
             
 			// default quoting style for this line: QUOTE_NONE
@@ -336,8 +377,8 @@ class Csv_AutoDetect
         	
         	$lines_processed++;
         	
-        	if ($lines_processed>15) {
-        		// don't process the whole file - stop processing after a while
+        	if ($lines_processed > 15) {
+        		// don't process the whole file - stop processing after fifteen lines
         		break;
         	}
         }

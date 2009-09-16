@@ -11,6 +11,7 @@
  * @version 0.1
  */
 require_once 'Csv/Exception/FileNotFound.php';
+require_once 'Csv/AutoDetect.php';
 require_once 'Csv/Dialect.php';
 require_once 'Csv/Reader/String.php';
 /**
@@ -82,45 +83,12 @@ class Csv_Reader implements Iterator, Countable
         if ($this->handle === false) throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
         if (is_null($dialect)) {
             // if dialect isn't specified in the constructor, the reader will attempt to figure out the format
-            $dialect = $this->determineDialect();
+			$data = file_get_contents($this->path);
+			$autodetect = new Csv_AutoDetect();
+			$dialect = $autodetect->detect($data);
         }
         $this->dialect = $dialect;
         $this->rewind();
-    
-    }
-    /**
-     * Attempt to deduce the format of the file we're trying to read
-     *
-     * @return The current Csv_Dialect object
-     * @access public
-     */
-    protected function determineDialect() {
-    
-        $data = file_get_contents($this->getPath());
-    	// this is a non-empty file
-        
-    	$linefeed = $this->guessLinefeed($data);
-        $count = count(explode($linefeed, $data));
-        // threshold is ten, so add one to account for extra linefeed that is supposed to be at the end
-        if ($count < 10) throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data.');
-        list($quote, $delim) = $this->guessQuoteAndDelim($data);
-        if (!$quote) {
-        	$quote = '"';
-        }
-        
-        if (is_null($delim)) {
-            if (!$delim = $this->guessDelim($data, $linefeed, $quote)) {
-                throw new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.');
-            }
-        }
-        
-        $dialect = new Csv_Dialect();
-        $dialect->quotechar = $quote;
-        $dialect->quoting = $this->guessQuotingStyle($data, $quote, $delim, $linefeed);
-        $dialect->delimiter = $delim;
-        $dialect->lineterminator = $linefeed;
-        
-        return $dialect;
     
     }
     /**

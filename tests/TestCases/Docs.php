@@ -27,7 +27,7 @@ class Test_Of_Csv_Docs extends UnitTestCase {
     
     public function setUp() {
     
-        $this->tmpfile = realpath('./') . 'data' .DIRECTORY_SEPARATOR. 'products.csv';
+        $this->tmpfile = './data' .DIRECTORY_SEPARATOR. 'products.csv';
         $writer = new Csv_Writer($this->tmpfile, new Csv_Dialect(array('quoting' => Csv_Dialect::QUOTE_NONNUMERIC)));
         $writer->writeRows($this->data);
     
@@ -35,7 +35,7 @@ class Test_Of_Csv_Docs extends UnitTestCase {
     
     public function tearDown() {
     
-        //unlink($this->tmpfile);
+        if (file_exists($this->tmpfile)) unlink($this->tmpfile);
     
     }
     // 2.2 - reading a csv file

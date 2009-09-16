@@ -57,11 +57,11 @@ class Csv_Writer
     public function __construct($file, $dialect = null) {
     
         if (is_null($dialect)) $dialect = new Csv_Dialect();
-        if (is_resource($file))
+        if (is_resource($file)) {
             $this->handle = $file;
-        else
+		} else {
             $this->filename = $file;
-        
+		}
         $this->dialect = $dialect;
     
     }
@@ -131,6 +131,7 @@ class Csv_Writer
      * Writes the data to the csv file according to the dialect specified
      *
      * @access protected
+	 * @todo Maybe this should attempt to chmod the file/directory it is trying to create?
      */
     protected function writeData() {
 

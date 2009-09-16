@@ -25,6 +25,13 @@ function pr($data) {
 
 }
 
+function pre($data) {
+
+	pr($data);
+	exit;
+
+}
+
 function make_table($headers, $rows) {
     echo "<table border=\"1\">\n";
     echo " <tr><th>#</th>\n";
