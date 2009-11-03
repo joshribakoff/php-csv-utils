@@ -3,14 +3,20 @@ require_once 'Csv/Dialect.php';
 /**
  * Csv Writer unit tests
  */
-class Test_Of_Csv_Dialect extends UnitTestCase
-{
+class Test_Of_Csv_Dialect extends UnitTestCase {
+
     public function setUp() {
     
+		
+	
     }
+	
     public function tearDown() {
+
     
+	
     }
+	
     public function test_Csv_Dialect_Can_Accept_Options_Param() {
     
         $dialect = new Csv_Dialect(array('delimiter' => "?", 'quotechar' => '`', 'lineterminator' => "\r\n"));
@@ -19,4 +25,5 @@ class Test_Of_Csv_Dialect extends UnitTestCase
         $this->assertEqual($dialect->lineterminator, "\r\n");
     
     }
+
 }

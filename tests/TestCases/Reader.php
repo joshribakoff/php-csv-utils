@@ -8,9 +8,10 @@ require_once 'Csv/Reader/String.php';
 /**
  * Csv Reader unit tests
  */
-class Test_Of_Csv_Reader extends UnitTestCase
-{
+class Test_Of_Csv_Reader extends UnitTestCase {
+
     protected $files = array();
+	
     protected $tempfile;
     
     public function setUp() {

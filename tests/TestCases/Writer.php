@@ -6,8 +6,8 @@ Mock::Generate('Csv_Dialect', 'Mock_Dialect_Two');
 /**
  * Csv Writer unit tests
  */
-class Test_Of_Csv_Writer extends UnitTestCase
-{
+class Test_Of_Csv_Writer extends UnitTestCase {
+
     public function setUp() {
     
         $this->dialect = new Mock_Dialect;
@@ -243,4 +243,5 @@ class Test_Of_Csv_Writer extends UnitTestCase
         $this->assertEqual(file_get_contents($this->file), $content . "10,11,12" . $writer->getDialect()->lineterminator);
     
     }
+
 }
