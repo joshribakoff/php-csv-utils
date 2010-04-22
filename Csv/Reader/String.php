@@ -4,9 +4,10 @@
  * Reads raw CSV data as if it were a file.
  *
  * @package     PHP CSV Utilities
- * @subpackage  Csv_Reader
+ * @subpackage  Readers
  * @author      Luke Visinoni <luke.visinoni@gmail.com>
  * @copyright   (c) 2010, Luke Visinoni <luke.visinoni@gmail.com>
+ * @license 	GNU Lesser General Public License
  * @version     $Id$
  */
 class Csv_Reader_String extends Csv_Reader {

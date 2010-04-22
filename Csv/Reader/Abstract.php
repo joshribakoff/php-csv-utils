@@ -1,6 +1,7 @@
 <?php
 /**
  * Abstract CSV Reader
+ * 
  * All CSV readers should extend this class. It provides the basic structure
  * and functionality of a CSV reader object.
  *
@@ -8,6 +9,7 @@
  * @subpackage  Csv_Reader
  * @author      Luke Visinoni <luke.visinoni@gmail.com>
  * @copyright   (c) 2010, Luke Visinoni <luke.visinoni@gmail.com>
+ * @license 	GNU Lesser General Public License
  * @version     $Id$
  */
 abstract class Csv_Reader_Abstract implements Iterator, Countable {

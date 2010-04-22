@@ -1,22 +1,19 @@
 <?php
 /**
- * CSV Utils
+ * CSV Reader
  * 
- * This is a csv reader - basically it reads a csv file into an array
- * Please read the LICENSE file
- * @copyright Luke Visinoni <luke.visinoni@gmail.com>
- * @author Luke Visinoni <luke.visinoni@gmail.com>
- * @package Csv
- * @license GNU Lesser General Public License
- * @version 0.1
- */
-
-/**
  * Provides an easy-to-use interface for reading csv-formatted text files. It
  * makes use of the function fgetcsv. It provides quite a bit of flexibility.
  * You can specify just about everything about how it should read a csv file
- * @package Csv
- * @subpackage Csv_Reader
+ *
+ * Please read the LICENSE file
+ * 
+ * @copyright 	(c) 2010, Luke Visinoni <luke.visinoni@gmail.com>
+ * @author 		Luke Visinoni <luke.visinoni@gmail.com>
+ * @package 	PHP CSV Utilities
+ * @subpackage 	Readers
+ * @license 	GNU Lesser General Public License
+ * @version 	$Id$
  */
 class Csv_Reader extends Csv_Reader_Abstract {
 	

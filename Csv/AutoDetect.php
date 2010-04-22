@@ -1,25 +1,28 @@
 <?php
-require_once 'Csv/Exception/CannotDetermineDialect.php';
 /**
- * CSV Utils - detecter
+ * AutoDetect component
  * 
  * This class accepts a sample of csv and attempts to deduce its format. It then
  * can return a Csv_Dialect tailored to that particular csv file
+ * 
  * Please read the LICENSE file
- * @copyright Luke Visinoni <luke.visinoni@gmail.com>
- * @author Luke Visinoni <luke.visinoni@gmail.com>
- * @package Csv
- * @license GNU Lesser General Public License
- * @version 0.1
+ * 
+ * @package 	PHP CSV Utilities
+ * @subpackage  AutoDetect
+ * @copyright 	(c) 2010 Luke Visinoni <luke.visinoni@gmail.com>
+ * @author 		Luke Visinoni <luke.visinoni@gmail.com>
+ * @license 	GNU Lesser General Public License
+ * @version 	$Id$
  */
+
 /**
  * Attempts to deduce the format of a csv file
  * 
  * @package Csv
  * @deprecated In favor of just use Csv_Reader::getDialect() and Csv_Reader::detectHasHeader()
  */
-class Csv_AutoDetect
-{
+class Csv_AutoDetect {
+
     /**
      * Attempts to deduce the format of a sample of a csv file and returns a dialect object
      * eventually it will throw an exception if it can't deduce the format, but for now it just
@@ -59,6 +62,7 @@ class Csv_AutoDetect
         return $dialect;
     
     }
+	
     /**
      * Determines if a csv sample has a header row - not 100% accurate by any means
      * It basically looks at each row in each column. If all but the first column are similar, 
@@ -113,6 +117,7 @@ class Csv_AutoDetect
         return ($has_headers > 0);
     
     }
+	
     /**
      * Since the reader returns all strings, this checks the type of the string for comparison
      * against header row in hasHeader()
@@ -135,6 +140,7 @@ class Csv_AutoDetect
         }
     
     }
+	
     /**
      * I copied this functionality from python's csv module. Basically, it looks
      * for text enclosed by identical quote characters which are in turn surrounded
@@ -173,6 +179,7 @@ class Csv_AutoDetect
         return array($quote, $delim);
     
     }
+	
     /**
      * Attempts to guess the delimiter of a set of data
      *
@@ -272,6 +279,7 @@ class Csv_AutoDetect
         return $delim;
     
     }
+	
     /**
      * @todo - understand what's going on here (I haven't yet had a chance to really look at it)
      */
@@ -284,7 +292,8 @@ class Csv_AutoDetect
 	    $deviation = sqrt(array_sum($variance) / count($variance));
 	    return $deviation;
 	
-    }    
+    }
+	
     /**
     * Guess what the line feed character is, default to CR/LF
 	 * @access protected
@@ -315,6 +324,7 @@ class Csv_AutoDetect
     	return "$cr$lf";
     
     }
+	
     /**
      * Guess what the quoting style is, default to none
 	 * @access protected
@@ -390,4 +400,5 @@ class Csv_AutoDetect
     	return $guess;
     
     }
+
 }

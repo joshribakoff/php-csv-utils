@@ -1,24 +1,19 @@
 <?php
 /**
- * CSV Utils
+ * CSV Reader
  * 
- * This is a csv writer - basically it writes a csv file from an array
- * Please read the LICENSE file
- * @copyright Luke Visinoni <luke.visinoni@gmail.com>
- * @author Luke Visinoni <luke.visinoni@gmail.com>
- * @package Csv
- * @license GNU Lesser General Public License
- * @version 0.1
- */
-require_once 'Csv/Dialect.php';
-require_once 'Csv/Exception.php';
-require_once 'Csv/Exception/FileNotFound.php';
-/**
  * Provides an easy-to-use interface for writing csv-formatted text files. It
  * does not make use of the PHP5 function fputcsv. It provides quite a bit of
  * flexibility. You can specify just about everything about how it writes csv
- * @package Csv
- * @subpackage Csv_Writer
+ *
+ * Please read the LICENSE file
+ * 
+ * @copyright 	(c) 2010, Luke Visinoni <luke.visinoni@gmail.com>
+ * @author 		Luke Visinoni <luke.visinoni@gmail.com>
+ * @package 	PHP CSV Utilities
+ * @subpackage 	Writers
+ * @license 	GNU Lesser General Public License
+ * @version 	$Id$
  */
 class Csv_Writer
 {
