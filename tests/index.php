@@ -63,8 +63,7 @@ require_once 'TestCases/Dialect.php';
 require_once 'TestCases/Docs.php';
 
 // run tests in html reporter
-// $test = new GroupTest('Core CSV Utilities Tests');
-$test = new GroupTest('Tests');
+$test = new GroupTest('Core CSV Utilities Tests');
 $test->addTestCase(new Test_Of_Csv_Reader);
 $test->addTestCase(new Test_Of_Csv_Writer);
 $test->addTestCase(new Test_Of_Csv_AutoDetect);
