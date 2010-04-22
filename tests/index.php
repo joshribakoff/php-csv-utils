@@ -32,6 +32,19 @@ function pre($data) {
 
 }
 
+function __autoload($className) {
+
+	$paths = explode(PATH_SEPARATOR, get_include_path());
+	foreach ($paths as $path) {
+		$file = str_replace('_', DIRECTORY_SEPARATOR, $className);
+		$filename = $path . DIRECTORY_SEPARATOR . $file . '.php';
+		if (file_exists($filename)) {
+			require_once $filename;
+		}
+	}
+
+}
+
 function make_table($headers, $rows) {
     echo "<table border=\"1\">\n";
     echo " <tr><th>#</th>\n";

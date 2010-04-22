@@ -1,5 +1,4 @@
 <?php
-require_once 'Csv/Dialect.php';
 /**
  * Csv Writer unit tests
  */

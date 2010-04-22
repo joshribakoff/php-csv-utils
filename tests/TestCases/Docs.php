@@ -1,8 +1,4 @@
 <?php
-require_once 'Csv/Dialect.php';
-require_once 'Csv/Reader.php';
-require_once 'Csv/Writer.php';
-require_once 'Csv/Reader/String.php';
 /**
  * This test case tests every example in the documentation to make sure they work
  * exactly as shown - part of the release process is to check the docs against this
