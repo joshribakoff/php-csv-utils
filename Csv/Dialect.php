@@ -51,6 +51,8 @@ class Csv_Dialect {
     
     /**
      * @var string The character used to escape the quotechar if it appears in a column
+     * @todo I believe quotes are used to escape quotes more often than backslashes in most software
+     * Look into it.
      */
     public $escapechar = "\\";
     
@@ -67,11 +69,13 @@ class Csv_Dialect {
     
     /**
      * @var string The character(s) used to terminate a line in the csv file
+     * @todo Maybe I should change this to PHP_EOL?
      */
     public $lineterminator = "\r\n";
     
     /**
      * @var integer Set to any of the self::QUOTE_* constants above
+     * @todo QUOTE_NONNUMERIC would probably make the most sense here
      */
     public $quoting = self::QUOTE_NONE;
     

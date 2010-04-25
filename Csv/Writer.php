@@ -164,13 +164,15 @@ class Csv_Writer
                     $column = $this->quote($this->escape($column));
                     break;                
                 case Csv_Dialect::QUOTE_NONNUMERIC:
-                    if (preg_match("/[^0-9]/", $column))
+                    if (preg_match("/[^0-9]/", $column)) {
                         $column = $this->quote($this->escape($column));
+					}
                     break;
                 case Csv_Dialect::QUOTE_MINIMAL:
                 default:
-                    if ($this->containsSpecialChars($column)) 
+                    if ($this->containsSpecialChars($column)) {
                         $column = $this->quote($this->escape($column));
+					}
                     break;            
             }
         }
@@ -218,7 +220,7 @@ class Csv_Writer
         $special_chars[] = $this->dialect->quotechar;
         $special_chars[] = $this->dialect->delimiter;
         foreach ($special_chars as $char) {
-            if (strpos($input, $char)) return true;
+            if (strpos($input, $char) !== false) return true;
         }
     
     }
