@@ -14,13 +14,6 @@
  * @license 	GNU Lesser General Public License
  * @version 	$Id$
  */
-
-/**
- * Attempts to deduce the format of a csv file
- * 
- * @package Csv
- * @deprecated In favor of just use Csv_Reader::getDialect() and Csv_Reader::detectHasHeader()
- */
 class Csv_AutoDetect {
 
     /**
@@ -40,7 +33,6 @@ class Csv_AutoDetect {
         // threshold is ten, so add one to account for extra linefeed that is supposed to be at the end
         if ($count < 10) {
 			throw new Csv_Exception_CannotDetermineDialect('You must provide at least ten lines in your sample data');
-		} else {
 		}
         list($quote, $delim) = $this->guessQuoteAndDelim($data);
         if (!$quote) {
@@ -154,19 +146,25 @@ class Csv_AutoDetect {
     protected function guessQuoteAndDelim($data) {
     
         $patterns = array();
-        $patterns[] = '/([^\w\n"\']) ?(["\']).*?(\2)(\1)/'; 
-        $patterns[] = '/(?:^|\n)(["\']).*?(\1)([^\w\n"\']) ?/'; // dont know if any of the regexes starting here work properly
-        $patterns[] = '/([^\w\n"\']) ?(["\']).*?(\2)(?:^|\n)/';
-        $patterns[] = '/(?:^|\n)(["\']).*?(\2)(?:$|\n)/';
+		// delim can be anything but line breaks, quotes, or any type of spaces
+		$delim = '([^\r\n\w"\'' . chr(32) . chr(30) . chr(160) . '])';
+        $patterns[] = '/' . $delim . ' ?(["\']).*?(\2)(\1)/'; // ,"something", - anything but whitespace or quotes followed by a possible space followed by a quote followed by anything followed by same quote, followed by same anything but whitespace
+        $patterns[] = '/(?:^|\n)(["\']).*?(\1)' . $delim . ' ?/'; // 'something', - beginning of line or line break, followed by quote followed by anything followed by quote followed by anything but whitespace or quotes
+        $patterns[] = '/' . $delim . ' ?(["\']).*?(\2)(?:^|\n)/'; // ,'something' - anything but whitespace or quote followed by possible space followed by quote followed by anything followed by quote, followed by end of line
+        $patterns[] = '/(?:^|\n)(["\']).*?(\2)(?:$|\n)/'; // 'something' - beginning of line followed by quote followed by anything followed by quote followed by same quote followed by end of line
         
         foreach ($patterns as $pattern) {
             if ($nummatches = preg_match_all($pattern, $data, $matches)) {
-                if ($matches) break;
+                if ($matches) {
+					break;
+				}
             }
         }
-        
-        if (!$matches) return array("", null); // couldn't guess quote or delim
-        
+		
+        if (!$matches) {
+			return array("", null); // couldn't guess quote or delim
+		}
+		
         $quotes = array_count_values($matches[2]);
         arsort($quotes);
         if ($quote = array_shift(array_flip($quotes))) {
@@ -194,33 +192,14 @@ class Csv_AutoDetect {
 	    
 	    $filtered = array();
 	    foreach ($charcount as $char => $count) {
-	    	if ($char == ord($quotechar)) {
-	    		// exclude the quote char
-	    		continue;
-	    	}
-	    	if ($char == ord(" ")) {
-	    		// exclude spaces
-	    		continue;
-	    	}
-	    	if ($char >= ord("a") && $char <= ord("z")) {
-	    		// exclude a-z
-	    		continue;
-	    	}
-	    	if ($char >= ord("A") && $char <= ord("Z")) {
-	    		// exclude A-Z
-	    		continue;
-	    	}
-	    	if ($char >= ord("0") && $char <= ord("9")) {
-	    		// exclude 0-9
-	    		continue;
-	    	}
-	    	if ($char == ord("\n") || $char == ord("\r")) {
-	    		// exclude linefeeds
-	    		continue;
-	    	}
-	    	$filtered[$char] = $count;
+			$chr = chr($char);
+			// if delim is not the quote character and it is an allowed delimiter,
+			// put it into the list of possible delim characters
+			if (ord($quotechar) != $char && $this->isValidDelim($chr)) {
+		    	$filtered[$char] = $count;
+			}
 	    }
-	    
+        
         // count every character on every line
         $data = explode($linefeed, $data);
         $tmp = array();
@@ -279,6 +258,36 @@ class Csv_AutoDetect {
         return $delim;
     
     }
+	
+	/**
+	 * @todo Clean this up, this is hideous...
+	 */
+	protected function isValidDelim($char) {
+	
+		$ord = ord($char);
+		if ($char == chr(32) || $char == chr(30) || $char == chr(160)) {
+			// exclude spaces of any kind...
+			return false;
+		}
+		if ($ord >= ord("a") && $ord <= ord("z")) {
+			// exclude a-z
+			return false;
+		}
+		if ($ord >= ord("A") && $ord <= ord("Z")) {
+			// exclude A-Z
+			return false;
+		}
+		if ($ord >= ord("0") && $ord <= ord("9")) {
+			// exclude 0-9
+			return false;
+		}
+		if ($ord == ord("\n") || $ord == ord("\r")) {
+			// exclude linefeeds
+			return false;
+		}
+		return true;
+	
+	}
 	
     /**
      * @todo - understand what's going on here (I haven't yet had a chance to really look at it)
