@@ -15,39 +15,41 @@
  * @license 	GNU Lesser General Public License
  * @version 	$Id$
  */
-class Csv_Writer
-{
+class Csv_Writer {
+
     /**
      * The filename of the file we're working on
      * @var string
      * @access protected
      */
     protected $filename;
+	
     /**
      * Holds an instance of Csv_Dialect - tells writer how to write
      * @var Csv_Dialect 
      * @access protected
      */
     protected $dialect;
+	
     /**
      * Holds the file resource
      * @var resource
      * @access protected
      */
     protected $handle;
+	
     /**
      * Contains the in-menory data waiting to be written to disk
      * @var array
      * @access protected
      */
     protected $data = array();
+	
     /**
      * Class constructor
      *
      * @param resource|string Either a valid filename or a valid file resource
      * @param Csv_Dialect A Csv_Dialect object
-     * @todo: Allow the user to pass in a file handle (this way they can specify
-     *        to append rather than overwrite or visa versa)
      */
     public function __construct($file, $dialect = null) {
     
@@ -60,6 +62,7 @@ class Csv_Writer
         $this->dialect = $dialect;
     
     }
+	
     /**
      * Get the current Csv_Dialect object
      *
@@ -71,6 +74,7 @@ class Csv_Writer
         return $this->dialect;
     
     }
+	
     /**
      * Change the dialect this csv reader is using
      *
@@ -82,6 +86,7 @@ class Csv_Writer
         $this->dialect = $dialect;
     
     }
+	
     /**
      * Get the filename attached to this writer (unless none was specified)
      *
@@ -95,6 +100,7 @@ class Csv_Writer
         return $this->filename;
     
     }
+	
     /**
      * Write a single row to the file
      *
@@ -107,6 +113,7 @@ class Csv_Writer
         $this->writeData();
     
     }
+	
     /**
      * Write multiple rows to file
      *
@@ -122,6 +129,7 @@ class Csv_Writer
         $this->writeData();
     
     }
+	
     /**
      * Writes the data to the csv file according to the dialect specified
      *
@@ -145,6 +153,7 @@ class Csv_Writer
         $this->data = array(); // data has been written, so empty it
     
     }
+	
     /**
      * Accepts a row of data and returns it formatted according to $this->dialect
      * This method is called by writeData()
@@ -179,6 +188,7 @@ class Csv_Writer
         return $row;
     
     }
+	
     /**
      * Escapes a column (escapes quotechar with escapechar)
      *
@@ -195,6 +205,7 @@ class Csv_Writer
         );
     
     }
+	
     /**
      * Quotes a column with quotechar
      *
@@ -207,6 +218,7 @@ class Csv_Writer
         return $this->dialect->quotechar . $input . $this->dialect->quotechar;
     
     }
+	
     /**
      * Returns true if input contains quotechar, delimiter or any of the characters in lineterminator
      *
@@ -224,9 +236,9 @@ class Csv_Writer
         }
     
     }
+	
     /**
-     * When the object is destroyed, if there is still data waiting to be written to disk, write it
-     *
+     * This is most likely redundant, but eh, it can't hurt anything.
      * @access public
      */
     public function __destruct() {
@@ -234,4 +246,5 @@ class Csv_Writer
         if (is_resource($this->handle)) fclose($this->handle);
     
     }
+
 }
