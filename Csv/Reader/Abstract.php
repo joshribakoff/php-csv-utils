@@ -113,7 +113,14 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable {
     
         // if dialect isn't specified in the constructor, the reader will attempt to figure out the format
         $autodetect = new Csv_AutoDetect();
-        return $autodetect->detect($data);
+        $dialect = $autodetect->detect($data);
+		// @todo Header detection isn't quite right (need to remove the first row from iteration)
+		/*if ($autodetect->hasHeader($data)) {
+			$this->rewind();
+			pre($this->loadRow());
+			$this->setHeader($this->loadRow());
+		}*/
+		return $dialect;
     
     }
     
