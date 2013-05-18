@@ -7,5 +7,10 @@
             "name": "Luke Visinoni"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "Csv": "source/"
+        }
+    }
 }
