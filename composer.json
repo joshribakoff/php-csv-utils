@@ -1,0 +1,11 @@
+{
+    "name": "joshribakoff/php-csv-utils",
+    "description": "php-csv-utils",
+    "license": "GNU Lesser General Public License",
+    "authors": [
+        {
+            "name": "Luke Visinoni"
+        }
+    ],
+    "minimum-stability": "dev"
+}
