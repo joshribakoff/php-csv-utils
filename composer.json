@@ -12,5 +12,8 @@
         "psr-0": {
             "Csv": "source/"
         }
-    }
+    },
+    "include-path": [
+        "source/"
+    ]
 }
