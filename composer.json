@@ -17,7 +17,7 @@
         "source/"
     ],
     "require-dev": {
-        "phpunit/phpunit": "3.7.19",
+        "phpunit/phpunit": ">=3.7.19,<3.8.0",
         "phpunit/php-invoker": "*",
         "phpunit/phpunit-selenium": "*",
         "phpunit/phpunit-story": "*",
