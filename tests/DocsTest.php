@@ -47,23 +47,22 @@ class DocsTest extends PHPUnit_Framework_TestCase
             print $row[1] . "<br>";
         }
         $captured = ob_get_clean();
-        $this->assertEquals($captured, 'Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>Something<br>Cheese Doodles<br>Monkey Juice<br>Plastic Monkeys<br>Steve<br>');
+        $this->assertEquals('Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>Something<br>Cheese Doodles<br>Monkey Juice<br>Plastic Monkeys<br>Steve<br>',$captured);
 
     }
 
     /** @todo Luke had this one commented out, figure out why & what to do */
     public function test_2_2_Other_Methods_Of_Looping_Through_A_File()
     {
-        return $this->markTestIncomplete();
         ob_start();
         $reader = new Csv_Reader($this->tmpfile);
         $i = 0;
-        while ($row = $reader->getRow() && $i < 5) {
+        while (($row = $reader->getRow()) && $i < 5) {
             print $row[1] . "<br>";
             $i++;
         }
         $captured = ob_get_clean();
-        $this->assertEquals($captured, 'Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>');
+        $this->assertEquals('Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>', $captured);
 
     }
 
