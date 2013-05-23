@@ -17,7 +17,6 @@
         "source/"
     ],
     "require-dev": {
-        "lastcraft/simpletest":"1.1.0",
         "phpunit/phpunit": "3.7.19",
         "phpunit/php-invoker": "*",
         "phpunit/phpunit-selenium": "*",
