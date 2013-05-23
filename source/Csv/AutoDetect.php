@@ -167,10 +167,12 @@ class Csv_AutoDetect {
         
         $quotes = array_count_values($matches[2]);
         arsort($quotes);
-        if ($quote = array_shift(array_flip($quotes))) {
+        $quotes = array_flip($quotes);
+        if ($quote = array_shift($quotes)) {
             $delims = array_count_values($matches[1]);
             arsort($delims);
-            $delim = array_shift(array_flip($delims));
+            $delims = array_flip($delims);
+            $delim = array_shift($delims);
         } else {
             $quote = ""; $delim = null;
         }
@@ -249,7 +251,8 @@ class Csv_AutoDetect {
         // now, prefer the delimiter with the highest average number of appearances
         if (count($tmp) > 0) {
             asort($tmp);
-            $delim = chr(end(array_keys($tmp)));
+            $tmp = array_keys($tmp);
+            $delim = chr(end($tmp));
         } else {
             // no potential delimiters remain
             $delim = false;
@@ -414,7 +417,8 @@ class Csv_AutoDetect {
         
         // return the quoting style that was used most often
         asort($quotingstyle_count);
-        $guess = end(array_keys($quotingstyle_count));
+        $quotingstyle_count = array_keys($quotingstyle_count);
+        $guess = end($quotingstyle_count);
         
         return $guess;
     
