@@ -94,16 +94,13 @@ class WriterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException Csv_Exception_FileNotFound
      * An exception should be thrown if there is an error writing to the csv file
      */
     public function test_Csv_Writer_Throws_Exception_If_Cant_Write()
     {
-        return $this->markTestIncomplete();
-        $path = './';
-        $this->expectException(new Csv_Exception_FileNotFound(sprintf('Unable to create/access file: "%s".', $path)));
-        $writer = new Csv_Writer($path);
+        $writer = new Csv_Writer('./');
         $writer->writeRow(array('one', 'two', 'three'));
-
     }
 
     /**
