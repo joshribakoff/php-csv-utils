@@ -1,3 +1,6 @@
+# Files created by IDEs
 /.idea/
-/tests/simpletest/
+
+# Composer related files & 3rd party libraries
 /vendor/
+composer.lock
