@@ -44,20 +44,15 @@ class WriterTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-
         if (file_exists($this->file)) unlink($this->file);
         if (file_exists($this->file2)) unlink($this->file2);
         if (file_exists($this->file3)) unlink($this->file3);
-
     }
 
     public function test_Csv_Writer_Accepts_Filename_In_Constructor()
     {
-
-
         $writer = new Csv_Writer($this->file);
         $this->assertEquals($this->file, $writer->getPath());
-
     }
 
     public function test_Csv_Writer_Uses_Default_Dialect()
@@ -67,17 +62,16 @@ class WriterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @todo make this test assert something more substantial.
      * Csv_Writer should also be able to accept a csv dialect in its constructor or by setDialect()
      */
     public function test_Csv_Writer_Accepts_Custom_Dialect()
     {
-        return $this->markTestIncomplete();
-        $reader = new Csv_Writer($this->file, new Mock_Dialect());
-        $this->assertInstanceOf($reader->getDialect(), 'Csv_Dialect');
+        $reader = new Csv_Writer($this->file, new Csv_Dialect());
+        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
 
-        $reader->setDialect(new Mock_Dialect_Two());
-        $this->assertInstanceOf($reader->getDialect(), 'Mock_Dialect_Two');
-
+        $reader->setDialect(new Csv_Dialect());
+        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
     }
 
     /**
@@ -85,12 +79,10 @@ class WriterTest extends PHPUnit_Framework_TestCase
      */
     public function test_Csv_Writer_Constructor_Creates_File_If_Nonexistant()
     {
-
         $this->assertFalse(file_exists($this->file));
         $writer = new Csv_Writer($this->file);
         $writer->writeRow(array('one', 'two', 'three'));
         $this->assertTrue(file_exists($this->file));
-
     }
 
     /**

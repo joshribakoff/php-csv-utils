@@ -44,18 +44,16 @@ class ReaderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @todo make this test assert something more substantial.
      * Csv_Reader should also be able to accept a csv dialect in its constructor or by setDialect()
      */
     public function test_Csv_Reader_Accepts_Custom_Dialect()
     {
-        return $this->markTestIncomplete();
+        $reader = new Csv_Reader($this->files['comma-200'], new Csv_Dialect());
+        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
 
-        $reader = new Csv_Reader($this->files['comma-200'], new Mock_Dialect());
-        $this->assertInstanceOf($reader->getDialect(), 'Csv_Dialect');
-
-        $reader->setDialect(new Mock_Dialect_Two());
-        $this->assertInstanceOf($reader->getDialect(), 'Mock_Dialect_Two');
-
+        $reader->setDialect(new Csv_Dialect());
+        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
     }
 
     /**
@@ -171,27 +169,20 @@ class ReaderTest extends PHPUnit_Framework_TestCase
 
     }
 
-    /** @todo Luke had this one commented out, figure out why & decide what to do */
+    /**
+     * @expectedException Csv_Exception
+     */
     public function test_Csv_Reader_Throws_Exception_On_Corrupt_Row()
     {
-        return $this->markTestIncomplete();
         $data = "\r\n\r\n234324234234,234,234,234,\r\n\r\nasdf,435,\r\n";
         file_put_contents($this->tempfile, $data);
         $reader = new Csv_Reader($this->tempfile);
-        $this->expectException(new Csv_Exception('Invalid format for row 3'));
+        //$this->expectException(new Csv_Exception('Invalid format for row 3'));
         foreach ($reader as $row) {
             // this should cause an exception
         }
 
-    }
-
-    /**
-     * @todo Luke never wrote this one, decide whether I should write it.
-     */
-    public function test_quotes_get_removed_from_data()
-    {
-        return $this->markTestIncomplete();
-    }
+    }   
 
     public function test_Count_Rewinds_Reader()
     {
@@ -239,9 +230,11 @@ class ReaderTest extends PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * @expectedException Csv_Exception_CannotDetermineDialect
+     */
     public function test_Reader_Throws_Exception_If_Dialect_Cant_Be_Determined()
     {
-        return $this->markTestIncomplete();
         $data = "I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
                  I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
@@ -256,9 +249,8 @@ class ReaderTest extends PHPUnit_Framework_TestCase
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
                  I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf";
-        $this->expectException(new Csv_Exception_CannotDetermineDialect('Csv_AutoDetect was unable to determine the file\'s dialect.'));
-        $reader = new Csv_Reader_String($data);
 
+        new Csv_Reader_String($data);
     }
 
     /**
@@ -331,26 +323,5 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $allrows = $reader->toArray();
         $this->assertEquals(array_keys(current($allrows)), $header);
 
-    }
-
-    /**
-     * Header should be detected automatically by Csv_AutoDetect, but if you want to be
-     * absolutely sure that the reader knows there's a header, you can call $reader->hasHeader(true)
-     * and it will ignore the dialect
-     * @todo Luke had this commented out, figure out why & decide what to do
-     */
-
-    public function test_Reader_DetectHeader()
-    {
-        return $this->markTestIncomplete();
-        // tab-200 has a header, so it should detect that
-        $reader = new Csv_Reader($this->files['tab-200']);
-        // turn on auto detect - if the file has a header,
-        $reader->detectHeader();
-
-        // comma-200 doesn't have a header, so it should detect that
-        $reader = new Csv_Reader($this->files['tab-200']);
-        //
-        $reader->detectHeader();
     }
 }
