@@ -11,9 +11,9 @@
 
 // set_include_path('/path/to/simpletest' . get_include_path());
 
-
+require_once('../vendor/autoload.php');
 set_include_path(
-    'simpletest/' . PATH_SEPARATOR .
+    '../vendor/lastcraft/simpletest/' . PATH_SEPARATOR .
     realpath('../source/') . PATH_SEPARATOR .
     get_include_path()
 );
@@ -68,9 +68,9 @@ function make_table($headers, $rows) {
 }
 
 // include simpletest classes
-require_once 'simpletest/unit_tester.php';
-require_once 'simpletest/reporter.php';
-require_once 'simpletest/mock_objects.php';
+require_once 'unit_tester.php';
+require_once 'reporter.php';
+require_once 'mock_objects.php';
 
 // include all tests
 require_once 'TestCases/Reader.php';
