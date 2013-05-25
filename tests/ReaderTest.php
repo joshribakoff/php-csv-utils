@@ -357,4 +357,12 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $row = $reader->getRow();
         $this->assertEquals('Jermaine Chan', $row[0], 'should get specific row');
     }
+
+    function testShouldGetAssociativeRowBasedOnHeader()
+    {
+        $reader = new Csv_Reader($this->files['tab-200']);
+        $reader->setPosition(1);
+        $row = $reader->getAssociativeRow();
+        $this->assertEquals('Shelley Wood', $row['name'], 'should get associative array based on header');
+    }
 }

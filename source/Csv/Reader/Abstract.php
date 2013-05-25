@@ -158,6 +158,14 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
 
     }
 
+    /** Get a row as an associative array using field names in first row as array key */
+    public function getAssociativeRow()
+    {
+        $row = $this->getRow();
+        $header = $this->getHeader();
+        return array_combine($header,$row);
+    }
+
     /**
      * Get number of lines that were skipped
      * @todo probably should return an array with actual data instead of just the amount
