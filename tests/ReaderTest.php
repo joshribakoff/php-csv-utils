@@ -331,4 +331,30 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $row = $reader->getRow();
         $this->assertEquals('Jermaine Chan', $row[0], 'should get specific row');
     }
+
+    function testShouldGetHeader()
+    {
+        $reader = new Csv_Reader($this->files['tab-200']);
+        $header = $reader->getHeader();
+        $expected = array('name', 'date', 'email', 'address_1', 'city', 'state', 'zip', 'country', 'phone', 'fax', 'keywords', 'order_id');
+        $this->assertEquals($expected, $header, 'should get header');
+    }
+
+    function testShouldGetHeaderWhenPointerIsNotAtHeader()
+    {
+        $reader = new Csv_Reader($this->files['tab-200']);
+        $reader->setPosition(5);
+        $header = $reader->getHeader();
+        $expected = array('name', 'date', 'email', 'address_1', 'city', 'state', 'zip', 'country', 'phone', 'fax', 'keywords', 'order_id');
+        $this->assertEquals($expected, $header, 'should get header');
+    }
+
+    function testShouldFinishAtOriginalPositionAfterGettingHeader()
+    {
+        $reader = new Csv_Reader($this->files['tab-200']);
+        $reader->setPosition(2);
+        $reader->getHeader();
+        $row = $reader->getRow();
+        $this->assertEquals('Jermaine Chan', $row[0], 'should get specific row');
+    }
 }

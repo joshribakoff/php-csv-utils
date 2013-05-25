@@ -246,4 +246,13 @@ class Csv_Reader extends Csv_Reader_Abstract
             $this->next();
         }
     }
+
+    function getHeader()
+    {
+        $original_position = $this->position;
+        $this->rewind();
+        $current = $this->current();
+        $this->setPosition($original_position);
+        return $current;
+    }
 }
