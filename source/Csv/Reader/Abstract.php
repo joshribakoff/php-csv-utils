@@ -66,9 +66,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function getDialect()
     {
-
         return $this->dialect;
-
     }
 
     /**
@@ -79,9 +77,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function setDialect(Csv_Dialect $dialect)
     {
-
         $this->dialect = $dialect;
-
     }
 
     /**
@@ -92,9 +88,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function hasHeader($flag = null)
     {
-
         return $this->dialect->hasHeader();
-
     }
 
     /**
@@ -107,16 +101,13 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function setHeader($header)
     {
-
         $row = $this->current();
         if (count($row) != count($header)) throw new Csv_Exception_InvalidHeaderRow('A header row should contain the same amount of columns as the data');
         $this->header = $header;
-
     }
 
     protected function detectDialect($data)
     {
-
         // if dialect isn't specified in the constructor, the reader will attempt to figure out the format
         $autodetect = new Csv_AutoDetect();
         $dialect = $autodetect->detect($data);
@@ -127,7 +118,6 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
             $this->setHeader($this->loadRow());
         }*/
         return $dialect;
-
     }
 
     /**
@@ -139,9 +129,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     protected function unescape(&$item, $key)
     {
-
         $item = str_replace($this->dialect->escapechar . $this->dialect->quotechar, $this->dialect->quotechar, $item);
-
     }
 
     /**
@@ -151,11 +139,9 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function getRow()
     {
-
         $return = $this->current();
         $this->next();
         return $return;
-
     }
 
     /** Get a row as an associative array using field names in first row as array key */
@@ -163,7 +149,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
     {
         $row = $this->getRow();
         $header = $this->getHeader();
-        return array_combine($header,$row);
+        return array_combine($header, $row);
     }
 
     /**
@@ -172,9 +158,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function getSkippedLines()
     {
-
         return $this->skippedlines;
-
     }
 
     /**
@@ -183,21 +167,17 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function toArray()
     {
-
         $return = array();
         $this->rewind();
         while ($row = $this->getRow()) {
             $return[] = $row;
         }
-
         // be kinds, please rewind
         $this->rewind();
         return $return;
-
     }
 
     abstract protected function loadRow();
-
     /*
     abstract public function next();
     
@@ -211,5 +191,4 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
     
     abstract public function count();
     */
-
 }

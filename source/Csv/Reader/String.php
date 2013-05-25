@@ -19,7 +19,6 @@ class Csv_Reader_String extends Csv_Reader
      */
     public function __construct($string, Csv_Dialect $dialect = null)
     {
-
         if (is_null($dialect)) {
             $dialect = $this->detectDialect($string);
         }
@@ -29,18 +28,14 @@ class Csv_Reader_String extends Csv_Reader
         if ($lastchar !== $dialect->lineterminator) $string = $string . $dialect->lineterminator;
         $this->initStream2($string);
         $this->rewind();
-
     }
 
     protected function initStream2($string)
     {
-
         $this->handle = fopen("php://memory", 'w+'); // not sure if I should use php://memory or php://temp here
         fwrite($this->handle, $string);
         if ($this->handle === false) {
             // throw new Csv_Reader_Exception_CannotReadMemoryStream('PHP cannot access the php://memory stream.');
         }
-
     }
-
 }

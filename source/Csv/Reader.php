@@ -41,7 +41,6 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function __construct($path, Csv_Dialect $dialect = null)
     {
-
         // open the file
         $this->setPath($path);
         $this->initStream();
@@ -51,7 +50,6 @@ class Csv_Reader extends Csv_Reader_Abstract
         }
         $this->dialect = $dialect;
         $this->rewind();
-
     }
 
     /**
@@ -62,13 +60,11 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     protected function setPath($path)
     {
-
         $this->path = $path;
         if (!file_exists($this->path)) {
             throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
         }
         return $this;
-
     }
 
     /**
@@ -79,19 +75,15 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function getPath()
     {
-
         return $this->path;
-
     }
 
     protected function initStream()
     {
-
         $this->handle = fopen($this->path, 'rb');
         if ($this->handle === false) {
             throw new Csv_Exception_FileNotFound('File does not exist or is not readable: "' . $path . '".');
         }
-
     }
 
     /**
@@ -102,7 +94,6 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     protected function loadRow()
     {
-
         if (!$this->current = fgetcsv($this->handle, $this->maxRowSize, $this->dialect->delimiter, $this->dialect->quotechar)) {
             // we actually don't want to throw an exception... that's a little dramatic. maybe log it?
             // throw new Csv_Exception('Invalid format for row ' . $this->position);
@@ -117,7 +108,6 @@ class Csv_Reader extends Csv_Reader_Abstract
             $this->skippedlines++;
             $this->next();
         }
-
     }
 
     /**
@@ -129,9 +119,7 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function close()
     {
-
         if (is_resource($this->handle)) fclose($this->handle);
-
     }
 
     /**
@@ -141,15 +129,12 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function __destruct()
     {
-
         $this->close();
-
     }
 
     /**
      * The following are the methods required by php's Standard PHP Library - Iterator, Countable Interfaces
      */
-
     /**
      * Advances the internal pointer to the next row and returns it if valid, otherwise it returns false
      *
@@ -158,11 +143,9 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function next()
     {
-
         $this->position++;
         $this->loadRow(); // loads the current row into memory
         return ($this->valid()) ? $this->current() : false;
-
     }
 
     /**
@@ -173,12 +156,9 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function valid()
     {
-
         if (is_resource($this->handle))
             return (boolean)!feof($this->handle);
-
         return false;
-
     }
 
     /**
@@ -189,10 +169,8 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function current()
     {
-
         if (empty($this->header) || !$this->current) return $this->current;
         else return array_combine($this->header, $this->current);
-
     }
 
     /**
@@ -202,11 +180,9 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function rewind()
     {
-
         rewind($this->handle);
         $this->position = 0;
         $this->loadRow(); // loads the current (first) row into memory 
-
     }
 
     /**
@@ -217,9 +193,7 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function key()
     {
-
         return (integer)$this->position;
-
     }
 
     /**
@@ -231,12 +205,10 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     public function count()
     {
-
         $lines = 0;
         foreach ($this as $row) $lines++;
         $this->rewind();
         return (integer)$lines;
-
     }
 
     public function setPosition($position)

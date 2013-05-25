@@ -23,24 +23,19 @@ class DocsTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->tmpfile = sys_get_temp_dir() . '/products.csv';
         $writer = new Csv_Writer($this->tmpfile, new Csv_Dialect(array('quoting' => Csv_Dialect::QUOTE_NONNUMERIC)));
         $writer->writeRows($this->data);
-
     }
 
     public function tearDown()
     {
-
         if (file_exists($this->tmpfile)) unlink($this->tmpfile);
-
     }
 
     // 2.2 - reading a csv file
     public function test_2_2_Reading_a_csv_file()
     {
-
         ob_start();
         $reader = new Csv_Reader($this->tmpfile);
         foreach ($reader as $row) {
@@ -48,7 +43,6 @@ class DocsTest extends PHPUnit_Framework_TestCase
         }
         $captured = ob_get_clean();
         $this->assertEquals('Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>Something<br>Cheese Doodles<br>Monkey Juice<br>Plastic Monkeys<br>Steve<br>', $captured);
-
     }
 
     /** @todo Luke had this one commented out, figure out why & what to do */
@@ -63,8 +57,5 @@ class DocsTest extends PHPUnit_Framework_TestCase
         }
         $captured = ob_get_clean();
         $this->assertEquals('Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>', $captured);
-
     }
-
-
 }

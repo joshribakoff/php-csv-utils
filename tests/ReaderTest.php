@@ -7,14 +7,12 @@ class ReaderTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->files['tab-200'] = __DIR__ . '/data/tab-200.csv';
         $this->files['pipe-100'] = __DIR__ . '/data/pipe-100.csv';
         $this->files['comma-200'] = __DIR__ . '/data/comma-200.csv';
         $this->files['blank-lines-200'] = __DIR__ . '/data/blank-lines-200.csv';
         $this->files['too-short'] = __DIR__ . '/data/too-short.csv';
         $this->tempfile = sys_get_temp_dir() . '/tmp.csv';
-
     }
 
     public function tearDown()
@@ -29,17 +27,14 @@ class ReaderTest extends PHPUnit_Framework_TestCase
      */
     public function test_Csv_Reader_Uses_AutoDetect_To_Get_Dialect_If_None_Provided()
     {
-
         $reader = new Csv_Reader($this->files['comma-200']);
         $dialect = $reader->getDialect();
         $this->assertInstanceOf('Csv_Dialect', $dialect);
         $this->assertEquals(",", $dialect->delimiter);
-
         $reader = new Csv_Reader($this->files['pipe-100']);
         $dialect = $reader->getDialect();
         $this->assertInstanceOf('Csv_Dialect', $dialect);
         $this->assertEquals("|", $dialect->delimiter);
-
     }
 
     /**
@@ -50,7 +45,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
     {
         $reader = new Csv_Reader($this->files['comma-200'], new Csv_Dialect());
         $this->assertInstanceOf('Csv_Dialect', $reader->getDialect());
-
         $reader->setDialect(new Csv_Dialect());
         $this->assertInstanceOf('Csv_Dialect', $reader->getDialect());
     }
@@ -60,12 +54,9 @@ class ReaderTest extends PHPUnit_Framework_TestCase
      */
     public function test_Csv_Reader_Count()
     {
-
-
         $reader = new Csv_Reader($this->files['comma-200']);
         $this->assertEquals(count($reader), 200);
         $this->assertEquals($reader->count(), 200);
-
     }
 
     /**
@@ -75,7 +66,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
     {
         $reader = new Csv_Reader($this->files['tab-200']);
         $this->assertEquals($this->files['tab-200'], $reader->getPath());
-
     }
 
     /**
@@ -99,7 +89,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         );
         $reader = new Csv_Reader($this->files['comma-200']);
         $this->assertEquals($reader->current(), $escape_removed_row);
-
     }
 
     /**
@@ -107,10 +96,8 @@ class ReaderTest extends PHPUnit_Framework_TestCase
      */
     public function test_Csv_Reader_Reads_Row()
     {
-
         $reader = new Csv_Reader($this->files['comma-200']);
         $this->assertEquals(count($reader->current()), 12);
-
     }
 
     /**
@@ -120,14 +107,12 @@ class ReaderTest extends PHPUnit_Framework_TestCase
      */
     public function test_Csv_Reader_Is_Iterable()
     {
-
         $reader = new Csv_Reader($this->files['comma-200']);
         $correct = 0;
         foreach ($reader as $row) {
             if (count($row) == 12) $correct++;
         }
         $this->assertEquals($correct, 200);
-
     }
 
     /**
@@ -148,7 +133,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $reader = new Csv_Reader($this->files['blank-lines-200']);
         foreach ($reader as $row) continue;
         $this->assertEquals($reader->getSkippedLines(), 13);
-
     }
 
     /**
@@ -165,7 +149,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
             $lines++;
         }
         $this->assertEquals($lines, 198);
-
     }
 
     /**
@@ -180,16 +163,13 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         foreach ($reader as $row) {
             // this should cause an exception
         }
-
     }
 
     public function test_Count_Rewinds_Reader()
     {
-
         $reader = new Csv_Reader($this->files['comma-200']);
         count($reader);
         $this->assertEquals($reader->key(), 0);
-
     }
 
     // test that $reader->toArray() returns an array of all csv data
@@ -197,7 +177,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
     // @todo also needs to ensure that object is rewound after toArray
     public function test_Reader_Can_Return_Data_As_Array()
     {
-
         $reader = new Csv_Reader($this->files['comma-200']);
         $first = $reader->current(); // grab this for testing later
         $data = $reader->toArray();
@@ -209,24 +188,20 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $reader->toArray();
         // test that toArray() rewinds after use
         $this->assertEquals($reader->current(), $first);
-
     }
 
     /** Moved from Csv_AutoDetect **/
-
     /**
      *
      */
     public function test_Reader_Automatically_Detects_Dialect()
     {
-
         $reader = new Csv_Reader($this->files['pipe-100']); // didnt provide a dialect, so it should detect format
         $dialect = $reader->getDialect();
         $this->assertInstanceOf('Csv_Dialect', $dialect);
         $this->assertEquals($dialect->delimiter, "|");
         $this->assertEquals($dialect->quotechar, '"');
         $this->assertEquals($dialect->quoting, Csv_Dialect::QUOTE_NONE);
-
     }
 
     /**
@@ -248,7 +223,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf
                  I am a piece of data without|||| any delimiters or anything\nI am another line\n. There is\n no way to determ\nine my
                  format\nsadf asd\nasdf asfadf\nasdl;fkas;lfdkasdf\nasdf as fad\nasdf as asdf\nsad,a dfas,d fasdf";
-
         new Csv_Reader_String($data);
     }
 
@@ -272,11 +246,9 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($detecter->hasHeader($sample2));
         $this->assertFalse($detecter->hasHeader($sample3));
         $this->assertTrue($detecter->hasHeader($sample4));
-
     }
 
     /** Stuff I should move into Csv_Reader_String tests **/
-
     /**
      * Tests that you can loop through Csv_Reader as if it was an array
      * This is the best way I can think of to test that its iterable
@@ -284,31 +256,26 @@ class ReaderTest extends PHPUnit_Framework_TestCase
      */
     public function test_Csv_Reader_String_Is_Iterable()
     {
-
         $reader = new Csv_Reader_String(file_get_contents($this->files['comma-200']));
         $correct = 0;
         foreach ($reader as $row) {
             if (count($row) == 12) $correct++;
         }
         $this->assertEquals($correct, 200);
-
     }
 
     public function test_Reader_String()
     {
-
         $sample = "";
         for ($i = 0; $i < 10; $i++) {
             $sample .= "this,is,some,test,data,$i\r\n";
         }
         $reader = new Csv_Reader_String($sample);
         $this->assertEquals($reader->count(), 10);
-
     }
 
     public function test_Set_Header()
     {
-
         // the comma-200 file doesn't have a header, so it will be indexed numerically
         $reader = new Csv_Reader($this->files['comma-200']);
         $header = array('name', 'date', 'email', 'address_1', 'city', 'state', 'zip', 'country', 'phone', 'fax', 'keywords', 'order_id');
@@ -321,7 +288,6 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array_keys($row), $header);
         $allrows = $reader->toArray();
         $this->assertEquals(array_keys(current($allrows)), $header);
-
     }
 
     function testShouldSetPosition()

@@ -24,5 +24,4 @@ class Csv_Dialect_Excel extends Csv_Dialect
     // public $skipinitialspace = false;
     public $lineterminator = "\r\n";
     public $quoting = Csv_Dialect::QUOTE_MINIMAL;
-
 }

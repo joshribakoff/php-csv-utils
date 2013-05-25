@@ -82,7 +82,6 @@ class Csv_Dialect
 
     public function __construct($options = null)
     {
-
         if (is_array($options)) {
             //pr($options);
             $properties = array();
@@ -91,16 +90,12 @@ class Csv_Dialect
                 $this->{$property} = $value;
             }
         }
-
     }
 
     public function __toString()
     {
-
         ob_start();
         var_dump($this);
         return ob_get_clean();
-
     }
-
 }

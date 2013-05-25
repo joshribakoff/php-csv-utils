@@ -54,7 +54,6 @@ class Csv_Writer
      */
     public function __construct($file, $dialect = null)
     {
-
         if (is_null($dialect)) $dialect = new Csv_Dialect();
         if (is_resource($file)) {
             $this->handle = $file;
@@ -62,7 +61,6 @@ class Csv_Writer
             $this->filename = $file;
         }
         $this->dialect = $dialect;
-
     }
 
     /**
@@ -73,9 +71,7 @@ class Csv_Writer
      */
     public function getDialect()
     {
-
         return $this->dialect;
-
     }
 
     /**
@@ -86,9 +82,7 @@ class Csv_Writer
      */
     public function setDialect(Csv_Dialect $dialect)
     {
-
         $this->dialect = $dialect;
-
     }
 
     /**
@@ -101,9 +95,7 @@ class Csv_Writer
      */
     public function getPath()
     {
-
         return $this->filename;
-
     }
 
     /**
@@ -114,10 +106,8 @@ class Csv_Writer
      */
     public function writeRow(Array $row)
     {
-
         $this->data[] = $row;
         $this->writeData();
-
     }
 
     /**
@@ -128,13 +118,11 @@ class Csv_Writer
      */
     public function writeRows($rows)
     {
-
         //if ($rows instanceof Csv_Writer) $rows->reset();
         foreach ($rows as $row) {
             $this->data[] = $row;
         }
         $this->writeData();
-
     }
 
     /**
@@ -145,7 +133,6 @@ class Csv_Writer
      */
     protected function writeData()
     {
-
         if (!is_resource($this->handle)) {
             if (!$this->handle = @fopen($this->filename, 'wb')) {
                 // if parser reaches this, the file couldnt be created
@@ -159,7 +146,6 @@ class Csv_Writer
         $output = implode($rows, $this->dialect->lineterminator) . $this->dialect->lineterminator; // ensures that there is a line terminator at the end of the file, which is necessary
         fwrite($this->handle, $output);
         $this->data = array(); // data has been written, so empty it
-
     }
 
     /**
@@ -172,7 +158,6 @@ class Csv_Writer
      */
     protected function formatRow(Array $row)
     {
-
         foreach ($row as &$column) {
             switch ($this->dialect->quoting) {
                 case Csv_Dialect::QUOTE_NONE:
@@ -195,7 +180,6 @@ class Csv_Writer
             }
         }
         return $row;
-
     }
 
     /**
@@ -207,13 +191,11 @@ class Csv_Writer
      */
     protected function escape($input)
     {
-
         return str_replace(
             $this->dialect->quotechar,
             $this->dialect->escapechar . $this->dialect->quotechar,
             $input
         );
-
     }
 
     /**
@@ -225,9 +207,7 @@ class Csv_Writer
      */
     protected function quote($input)
     {
-
         return $this->dialect->quotechar . $input . $this->dialect->quotechar;
-
     }
 
     /**
@@ -239,14 +219,12 @@ class Csv_Writer
      */
     protected function containsSpecialChars($input)
     {
-
         $special_chars = str_split($this->dialect->lineterminator, 1);
         $special_chars[] = $this->dialect->quotechar;
         $special_chars[] = $this->dialect->delimiter;
         foreach ($special_chars as $char) {
             if (strpos($input, $char) !== false) return true;
         }
-
     }
 
     /**
@@ -255,9 +233,6 @@ class Csv_Writer
      */
     public function __destruct()
     {
-
         if (is_resource($this->handle)) fclose($this->handle);
-
     }
-
 }
