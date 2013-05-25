@@ -19,8 +19,7 @@ class ReaderTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if (file_exists($this->tempfile))
-        {
+        if (file_exists($this->tempfile)) {
             unlink($this->tempfile);
         }
     }
@@ -50,10 +49,10 @@ class ReaderTest extends PHPUnit_Framework_TestCase
     public function test_Csv_Reader_Accepts_Custom_Dialect()
     {
         $reader = new Csv_Reader($this->files['comma-200'], new Csv_Dialect());
-        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
+        $this->assertInstanceOf('Csv_Dialect', $reader->getDialect());
 
         $reader->setDialect(new Csv_Dialect());
-        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
+        $this->assertInstanceOf('Csv_Dialect', $reader->getDialect());
     }
 
     /**
@@ -182,7 +181,7 @@ class ReaderTest extends PHPUnit_Framework_TestCase
             // this should cause an exception
         }
 
-    }   
+    }
 
     public function test_Count_Rewinds_Reader()
     {
@@ -223,7 +222,7 @@ class ReaderTest extends PHPUnit_Framework_TestCase
 
         $reader = new Csv_Reader($this->files['pipe-100']); // didnt provide a dialect, so it should detect format
         $dialect = $reader->getDialect();
-        $this->assertInstanceOf('Csv_Dialect',$dialect);
+        $this->assertInstanceOf('Csv_Dialect', $dialect);
         $this->assertEquals($dialect->delimiter, "|");
         $this->assertEquals($dialect->quotechar, '"');
         $this->assertEquals($dialect->quoting, Csv_Dialect::QUOTE_NONE);
@@ -266,8 +265,8 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $data = file($this->files['tab-200']);
         $sample1 = implode("", array_slice($data, 0, 20));
         $sample2 = implode("", array_slice($data, 1, 21));
-        $sample3 = implode("\n", file(__DIR__."/data/excel-formatted.csv"));
-        $sample4 = implode("", file(__DIR__."/data/pipe-100.csv"));
+        $sample3 = implode("\n", file(__DIR__ . "/data/excel-formatted.csv"));
+        $sample4 = implode("", file(__DIR__ . "/data/pipe-100.csv"));
         $detecter = new Csv_AutoDetect();
         $this->assertTrue($detecter->hasHeader($sample1));
         $this->assertFalse($detecter->hasHeader($sample2));

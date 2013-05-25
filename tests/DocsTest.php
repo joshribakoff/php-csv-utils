@@ -24,7 +24,7 @@ class DocsTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
 
-        $this->tmpfile = sys_get_temp_dir().'/products.csv';
+        $this->tmpfile = sys_get_temp_dir() . '/products.csv';
         $writer = new Csv_Writer($this->tmpfile, new Csv_Dialect(array('quoting' => Csv_Dialect::QUOTE_NONNUMERIC)));
         $writer->writeRows($this->data);
 
@@ -47,7 +47,7 @@ class DocsTest extends PHPUnit_Framework_TestCase
             print $row[1] . "<br>";
         }
         $captured = ob_get_clean();
-        $this->assertEquals('Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>Something<br>Cheese Doodles<br>Monkey Juice<br>Plastic Monkeys<br>Steve<br>',$captured);
+        $this->assertEquals('Widget<br>Whatsamahoozit<br>Dandy Doodad<br>Thingamajigger<br>Jolly Junk<br>Something<br>Cheese Doodles<br>Monkey Juice<br>Plastic Monkeys<br>Steve<br>', $captured);
 
     }
 

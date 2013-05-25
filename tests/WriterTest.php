@@ -11,7 +11,7 @@ class WriterTest extends PHPUnit_Framework_TestCase
         $this->dialect->skipblanklines = true;
         $this->dialect->lineterminator = "\r\n";
 
-        $this->file =  sys_get_temp_dir() . '/writer1.csv';
+        $this->file = sys_get_temp_dir() . '/writer1.csv';
         $this->file2 = sys_get_temp_dir() . '/writer2.csv';
         $this->file3 = sys_get_temp_dir() . '/writer3.csv';
 
@@ -58,7 +58,7 @@ class WriterTest extends PHPUnit_Framework_TestCase
     public function test_Csv_Writer_Uses_Default_Dialect()
     {
         $writer = new Csv_Writer($this->file);
-        $this->assertInstanceOf('Csv_Dialect',$writer->getDialect());
+        $this->assertInstanceOf('Csv_Dialect', $writer->getDialect());
     }
 
     /**
@@ -68,10 +68,10 @@ class WriterTest extends PHPUnit_Framework_TestCase
     public function test_Csv_Writer_Accepts_Custom_Dialect()
     {
         $reader = new Csv_Writer($this->file, new Csv_Dialect());
-        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
+        $this->assertInstanceOf('Csv_Dialect', $reader->getDialect());
 
         $reader->setDialect(new Csv_Dialect());
-        $this->assertInstanceOf('Csv_Dialect',$reader->getDialect());
+        $this->assertInstanceOf('Csv_Dialect', $reader->getDialect());
     }
 
     /**
