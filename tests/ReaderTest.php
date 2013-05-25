@@ -324,4 +324,12 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array_keys(current($allrows)), $header);
 
     }
+
+    function testShouldSetPosition()
+    {
+        $reader = new Csv_Reader($this->files['tab-200']);
+        $reader->setPosition(2);
+        $row = $reader->getRow();
+        $this->assertEquals('Jermaine Chan', $row[0], 'should get specific row');
+    }
 }

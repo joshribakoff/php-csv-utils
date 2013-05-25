@@ -224,4 +224,11 @@ class Csv_Reader extends Csv_Reader_Abstract {
         return (integer) $lines;
     
     }
+
+    public function setPosition($position) {
+        $this->rewind();
+        while($this->position < $position) {
+            $this->next();
+        }
+    }
 }
