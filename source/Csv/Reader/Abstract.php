@@ -148,6 +148,9 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
     public function getAssociativeRow()
     {
         $row = $this->getRow();
+        if(!$row) {
+            return false;
+        }
         $header = $this->getHeader();
         return array_combine($header, $row);
     }
