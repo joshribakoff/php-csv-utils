@@ -369,7 +369,7 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $reader = new Csv_Reader($file, $dialect);
         $header = $reader->getAssociativeRow();
 
-        $this->setExpectedException('Exception', 'Extra field with value [dont forget about me]');
+        $this->setExpectedException('Exception', 'Extra field on line [2] with value [dont forget about me]');
         $row = $reader->getAssociativeRow();
     }
 

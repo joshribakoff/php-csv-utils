@@ -156,7 +156,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
             $drop_fields = array_splice($row, count($header));
             foreach($drop_fields as $drop_field) {
                 if(!empty($drop_field)) {
-                    throw new Exception(sprintf('Extra field with value [%s]', $drop_field));
+                    throw new Exception(sprintf('Extra field on line [%d] with value [%s]', $this->position, $drop_field));
                 }
             }
             $row = array_splice($row, 0, count($header));
