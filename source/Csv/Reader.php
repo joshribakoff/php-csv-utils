@@ -32,6 +32,9 @@ class Csv_Reader extends Csv_Reader_Abstract
      */
     protected $handle;
 
+    /** @todo Luke had a field in the base class called $header, figure out what's going on there & remove it */
+    protected $headerRow;
+
     /**
      * Class constructor
      *
@@ -221,10 +224,14 @@ class Csv_Reader extends Csv_Reader_Abstract
 
     function getHeader()
     {
+        if(isset($this->headerRow)) {
+            return $this->headerRow;
+        }
         $original_position = $this->position;
         $this->rewind();
         $current = $this->current();
         $this->setPosition($original_position);
+        $this->headerRow = $current;
         return $current;
     }
 }
