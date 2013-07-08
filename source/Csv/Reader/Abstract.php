@@ -161,6 +161,9 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
             }
             $row = array_splice($row, 0, count($header));
         }
+        if(count($header) != count($row)) {
+            throw new Exception(sprintf('Line [%d] has [%d] fields, but header has [%d]', $this->position, count($row), count($header)));
+        }
         return array_combine($header, $row);
     }
 

@@ -373,6 +373,22 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $row = $reader->getAssociativeRow();
     }
 
+    function testShouldThrowExceptionForNotEnoughFields()
+    {
+        $dialect = new \Csv_Dialect();
+
+        $data = "foo,bar,baz,bat\n";
+        $data .= "test";
+
+        $file = sys_get_temp_dir().'/extra.csv';
+        file_put_contents($file, $data);
+        $reader = new Csv_Reader($file, $dialect);
+        $header = $reader->getAssociativeRow();
+
+        $this->setExpectedException('Exception', 'Line [2] has [1] fields, but header has [4]');
+        $row = $reader->getAssociativeRow();
+    }
+
     function testShouldReadUTF8Text()
     {
         $file = sys_get_temp_dir().'/utf8.csv';
