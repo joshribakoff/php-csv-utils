@@ -372,4 +372,14 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('Exception', 'Extra field with value [dont forget about me]');
         $row = $reader->getAssociativeRow();
     }
+
+    function testShouldReadUTF8Text()
+    {
+        $file = sys_get_temp_dir().'/utf8.csv';
+        file_put_contents($file, 'foo,ﺡ,bar');
+
+        $reader = new Csv_Reader($file, new Csv_Dialect());
+        $row = $reader->getRow();
+        $this->assertEquals(array('foo','ﺡ','bar'), $row);
+    }
 }

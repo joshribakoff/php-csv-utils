@@ -249,4 +249,11 @@ class WriterTest extends PHPUnit_Framework_TestCase
 
     }
 
+    function testShouldWriteUTF8Text()
+    {
+        $writer = new Csv_Writer($this->file);
+        $writer->writeRow(array('foo','ﺡ','bar'));
+        $this->assertEquals('foo,ﺡ,bar'."\r\n", file_get_contents($this->file));
+    }
+
 }
