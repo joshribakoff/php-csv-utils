@@ -338,4 +338,38 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $reader->setPosition(201);
         $this->assertFalse($reader->getAssociativeRow(), 'should handle EOF w/ associative rows');
     }
+
+    function testShouldRecoverFromExtraBlankFields()
+    {
+        $dialect = new \Csv_Dialect();
+
+        $data = "foo,bar\n";
+        $data .= "test,test,";
+
+        $file = sys_get_temp_dir().'/extra.csv';
+        file_put_contents($file, $data);
+        $reader = new Csv_Reader($file, $dialect);
+        $header = $reader->getAssociativeRow();
+        $row = $reader->getAssociativeRow();
+        $this->assertEquals(array(
+            'foo'=>'test',
+            'bar'=>'test',
+        ), $row, 'should not break because a row has extra [blank] fields!');
+    }
+
+    function testShouldThrowExceptionForExtraPopulatedFields()
+    {
+        $dialect = new \Csv_Dialect();
+
+        $data = "foo,bar\n";
+        $data .= "test,test,dont forget about me";
+
+        $file = sys_get_temp_dir().'/extra.csv';
+        file_put_contents($file, $data);
+        $reader = new Csv_Reader($file, $dialect);
+        $header = $reader->getAssociativeRow();
+
+        $this->setExpectedException('Exception', 'Extra field with value [dont forget about me]');
+        $row = $reader->getAssociativeRow();
+    }
 }
