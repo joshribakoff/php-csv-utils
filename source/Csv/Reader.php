@@ -108,7 +108,7 @@ class Csv_Reader extends Csv_Reader_Abstract
         ) array_walk($this->current, array($this, 'unescape'));
         // if this row is blank and dialect says to skip blank lines, load in the next one and pretend this never happened
         if ($this->dialect->skipblanklines && is_array($this->current) && count($this->current) == 1 && $this->current[0] == '') {
-            $this->skippedlines++;
+            $this->skippedLines++;
             $this->next();
         }
     }

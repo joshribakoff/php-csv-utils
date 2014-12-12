@@ -173,7 +173,7 @@ abstract class Csv_Reader_Abstract implements Iterator, Countable
      */
     public function getSkippedLines()
     {
-        return $this->skippedlines;
+        return $this->skippedLines;
     }
 
     /**
