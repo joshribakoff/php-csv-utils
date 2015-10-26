@@ -75,6 +75,11 @@ class Csv_Dialect
     public $lineterminator = "\r\n";
 
     /**
+     * @var boolean Does this CSV hav a header?
+     */
+    public $hasheader = false;
+
+    /**
      * @var integer Set to any of the self::QUOTE_* constants above
      * @todo QUOTE_NONNUMERIC would probably make the most sense here
      */

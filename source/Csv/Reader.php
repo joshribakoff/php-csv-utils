@@ -186,6 +186,15 @@ class Csv_Reader extends Csv_Reader_Abstract
         rewind($this->handle);
         $this->position = 0;
         $this->loadRow(); // loads the current (first) row into memory 
+        if ($this->dialect->hasheader) {
+            // Can't call call getHeader() due to infinite loop.  So instead
+            // do the same work.
+            $current = $this->current();
+            $this->position++;
+            $this->headerRow = $current;
+            // Go to the next row.
+            $this->next();
+        }
     }
 
     /**
