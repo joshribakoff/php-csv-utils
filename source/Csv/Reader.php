@@ -108,7 +108,7 @@ class Csv_Reader extends Csv_Reader_Abstract
         ) array_walk($this->current, array($this, 'unescape'));
         // if this row is blank and dialect says to skip blank lines, load in the next one and pretend this never happened
         if ($this->dialect->skipblanklines && is_array($this->current) && count($this->current) == 1 && $this->current[0] == '') {
-            $this->skippedlines++;
+            $this->skippedLines++;
             $this->next();
         }
     }
@@ -186,6 +186,15 @@ class Csv_Reader extends Csv_Reader_Abstract
         rewind($this->handle);
         $this->position = 0;
         $this->loadRow(); // loads the current (first) row into memory 
+        if ($this->dialect->hasheader) {
+            // Can't call call getHeader() due to infinite loop.  So instead
+            // do the same work.
+            $current = $this->current();
+            $this->position++;
+            $this->headerRow = $current;
+            // Go to the next row.
+            $this->next();
+        }
     }
 
     /**
