@@ -12,6 +12,7 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $this->files['comma-200'] = __DIR__ . '/data/comma-200.csv';
         $this->files['blank-lines-200'] = __DIR__ . '/data/blank-lines-200.csv';
         $this->files['too-short'] = __DIR__ . '/data/too-short.csv';
+        $this->files['comma-quote-minimal'] = __DIR__ . '/data/comma-quote-minimal.csv';
         $this->tempfile = sys_get_temp_dir() . '/tmp.csv';
     }
 
@@ -398,4 +399,54 @@ class ReaderTest extends PHPUnit_Framework_TestCase
         $row = $reader->getRow();
         $this->assertEquals(array('foo','ﺡ','bar'), $row);
     }
+
+    /**
+     * We should get back the path to the csv file if the csv file exists
+     */
+    public function test_Csv_Reader_HasHeader()
+    {
+        $dialect = new Csv_Dialect();
+        $dialect->hasheader = true;
+        $reader = new Csv_Reader($this->files['comma-quote-minimal'], $dialect);
+
+        // Assert count.
+        $this->assertEquals(100, $reader->count());
+
+        // Assert header contents.
+        $actual_header = $reader->getHeader();
+        $expected_header = array(
+            'name',
+            'date',
+            'email',
+            'address_1',
+            'city',
+            'state',
+            'zip',
+            'country',
+            'phone',
+            'fax',
+            'keywords',
+            'order_id',
+        );
+        $this->assertEquals($actual_header, $expected_header);
+    }
+
+
+    function data_provider_test_provider()
+    {
+        $dialect = new Csv_Dialect();
+        $dialect->hasheader = true;
+        $reader = new Csv_Reader(__DIR__ . '/data/comma-quote-minimal.csv', $dialect);
+        return $reader;
+    }
+
+
+    /**
+     * @dataProvider data_provider_test_provider
+     */
+    public function test_php_csv_utils_as_data_provider( $name, $date, $email, $address_1, 
+      $city, $state, $zip, $country, $phone, $fax, $keywords, $order_id ) {
+        $this->assertEquals( strlen($state), 2 );
+    }
+
 }
