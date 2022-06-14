@@ -142,13 +142,12 @@ class Csv_Reader extends Csv_Reader_Abstract
      * Advances the internal pointer to the next row and returns it if valid, otherwise it returns false
      *
      * @access public
-     * @return boolean|array An array of data if valid, or false if not
+     * @return void
      */
-    public function next()
+    public function next():void
     {
         $this->position++;
         $this->loadRow(); // loads the current row into memory
-        return ($this->valid()) ? $this->current() : false;
     }
 
     /**
@@ -157,7 +156,7 @@ class Csv_Reader extends Csv_Reader_Abstract
      * @access public
      * @return boolean True if the current row is valid
      */
-    public function valid()
+    public function valid():bool
     {
         if (is_resource($this->handle))
             return (boolean)!feof($this->handle);
@@ -170,7 +169,7 @@ class Csv_Reader extends Csv_Reader_Abstract
      * @access public
      * @return array An array of the current row's data
      */
-    public function current()
+    public function current():mixed
     {
         if (empty($this->header) || !$this->current) return $this->current;
         else return array_combine($this->header, $this->current);
@@ -181,7 +180,7 @@ class Csv_Reader extends Csv_Reader_Abstract
      *
      * @access public
      */
-    public function rewind()
+    public function rewind():void
     {
         rewind($this->handle);
         $this->position = 0;
@@ -194,7 +193,7 @@ class Csv_Reader extends Csv_Reader_Abstract
      * @access public
      * @return integer
      */
-    public function key()
+    public function key():mixed
     {
         return (integer)$this->position;
     }
@@ -206,7 +205,7 @@ class Csv_Reader extends Csv_Reader_Abstract
      * @return integer
      * @todo Should this remember the position the file was in or something?
      */
-    public function count()
+    public function count():int
     {
         $lines = 0;
         foreach ($this as $row) $lines++;
